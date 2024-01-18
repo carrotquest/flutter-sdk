@@ -31,9 +31,9 @@ class MethodChannelCarrotquestSdk extends CarrotquestSdkPlatform {
   }
 
   @override
-  Future<void> auth(userId, userAuthKey) async {
+  Future<void> auth(userId, {userAuthKey = null, userHash = null}) async {
     await methodChannel.invokeMethod<String>(
-        'auth', {'user_id': userId, 'user_auth_key': userAuthKey});
+        'auth', {'user_id': userId, 'user_auth_key': userAuthKey, 'user_hash': userHash});
     return;
   }
 

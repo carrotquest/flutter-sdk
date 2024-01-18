@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'carrotquest_sdk'
-  s.version          = '0.0.1'
+  s.version          = '0.0.4'
   s.summary          = 'A new Flutter plugin project.'
   s.description      = <<-DESC
 A new Flutter plugin project.
@@ -16,7 +16,7 @@ A new Flutter plugin project.
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
   s.platform = :ios, '11.0'
-  s.dependency 'CarrotquestSDK', '2.10.2'
+  s.dependency 'CarrotquestSDK', '2.10.4'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }

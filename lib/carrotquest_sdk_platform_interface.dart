@@ -32,7 +32,7 @@ abstract class CarrotquestSdkPlatform extends PlatformInterface {
     throw UnimplementedError('setup() has not been implemented.');
   }
 
-  Future<void> auth(userId, userAuthKey) {
+  Future<void> auth(userId, {userAuthKey = null, userHash = null}) {
     throw UnimplementedError('auth() has not been implemented.');
   }
 
