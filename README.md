@@ -59,10 +59,13 @@ Carrot.setup(apiKey, appId);
 <a name="auth"></a>
 ## Авторизация пользователей
 
-Если в вашем приложении присутствует авторизация пользователей, вы можете передать id пользователя в Carrot:
+Если в вашем приложении присутствует авторизация пользователей, вы можете передать id пользователя в Carrot и user auth key (устаревший и небезопасный метод) либо user hash, сгенерированный на бэкенде:
 
 ```dart  
-Carrot.auth(userId, userAuthKey);  
+Carrot.auth(userId, userAuthKey: userAuthKey);  
+```  
+```dart  
+Carrot.auth(userId, userHash: hashedAuth);  
 ```  
 
 Чтобы сменить пользователя, нужно вызвать метод логаута:
