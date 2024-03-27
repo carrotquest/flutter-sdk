@@ -1,3 +1,6 @@
+## 0.0.4 
+- Added the ability to authorize using a hash.
+
 ## 0.0.3 
 - Fixed problems with receiving messages from bots
 - Fixed other problems related to bots

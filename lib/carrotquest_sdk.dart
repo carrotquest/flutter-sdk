@@ -9,8 +9,13 @@ class Carrot {
   }
 
   /// Authentification user
-  static Future<void> auth(userId, userAuthKey) {
-    return CarrotquestSdkPlatform.instance.auth(userId, userAuthKey);
+  static Future<void> auth(String userId,
+      {String? userAuthKey, String? userHash}) {
+    return CarrotquestSdkPlatform.instance.auth(
+      userId,
+      userAuthKey: userAuthKey,
+      userHash: userHash,
+    );
   }
 
   /// Deinitialisation SDK

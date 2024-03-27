@@ -70,14 +70,32 @@ public class CarrotquestSdkPlugin: NSObject, FlutterPlugin {
       result(nil)
     }
 
-    private func _auth(with call: FlutterMethodCall, and result: @escaping FlutterResult) {
+private func _auth(with call: FlutterMethodCall, and result: @escaping FlutterResult) {
       guard let args = call.arguments as? NSDictionary else { return }
       guard let userAuthKey = args["user_auth_key"] as? String else { return }
+      let userAuthKey = args["user_auth_key"] as? String
+      let userHash = args["user_hash"] as? String
+        if userAuthKey == nil && userHash == nil { return }
         guard let userId = args["user_id"] as? String else {return}
 
         Carrot.shared.auth(withUserId: userId, withUserAuthKey: userAuthKey, successHandler: {
             result(nil)
         }, errorHandler: { e in result(FlutterError(code: "auth", message: "auth error", details: e))})
+        if userAuthKey == nil {
+            if let unwrappedUserHash = userHash {
+                Carrot.shared.hashedAuth(withUserId: userId, withHash: unwrappedUserHash, successHandler: {
+                    result(nil)
+                }, errorHandler: { e in result(FlutterError(code: "auth", message: "auth error", details: e))})
+                return
+            } else {
+                return
+            }
+        }
+        if let unwrappeduserAuthKey = userAuthKey {
+            Carrot.shared.auth(withUserId: userId, withUserAuthKey: unwrappeduserAuthKey, successHandler: {
+                result(nil)
+            }, errorHandler: { e in result(FlutterError(code: "auth", message: "auth error", details: e))})
+        }
     }
 
     private func _setUserProperty(with call: FlutterMethodCall, and result: @escaping FlutterResult) {

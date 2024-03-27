@@ -198,12 +198,31 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
         val userId = call.argument<String?>("user_id")
         val userAuthKey = call.argument<String?>("user_auth_key")
-        if (userId == null || userAuthKey == null) {
-            result.error("An error has occurred, the userId or userAuthKey is null.", null, null)
+        val userHash = call.argument<String?>("user_hash")
+        if (userId == null || (userAuthKey == null && userHash == null)) {
+            result.error("An error has occurred, the userId or userAuthKey/userHash is null.", null, null)
             return
         }
 
-        Carrot.auth(userId, userAuthKey, object : Callback<Boolean> {
+
+        if (userHash !== null) {
+            Carrot.hashedAuth(userId, userHash, object : Callback<Boolean> {
+                override fun onResponse(resultAuth: Boolean?) {
+                    if(resultAuth == true) {
+                        result.success(null)
+                    } else {
+                        result.error("Auth is failed", null, null)
+                    }
+                }
+
+                override fun onFailure(t: Throwable?) {
+                    result.error("Auth is failed: " + t.toString(), null, null)
+                }
+            })
+            return
+        }
+
+         Carrot.auth(userId, userAuthKey, object : Callback<Boolean> {
             override fun onResponse(resultAuth: Boolean?) {
                 if(resultAuth == true) {
                     result.success(null)
@@ -211,7 +230,6 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
                     result.error("Auth is failed", null, null)
                 }
             }
-
             override fun onFailure(t: Throwable?) {
                 result.error("Auth is failed: " + t.toString(), null, null)
             }

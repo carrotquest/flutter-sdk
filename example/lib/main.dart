@@ -4,6 +4,7 @@ import 'package:carrotquest_sdk/carrotquest_sdk.dart';
 import 'package:carrotquest_sdk/user_property/carrot_user_property.dart';
 import 'package:carrotquest_sdk/user_property/ecommerce_user_property.dart';
 import 'package:carrotquest_sdk/user_property/user_property.dart';
+import 'package:carrotquest_sdk_example/get_hash_use_case.dart';
 import 'package:carrotquest_sdk_example/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -33,7 +34,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final _carrot = Carrot();
 
-  /// Для работы с Carrot quest для Flutter вам понадобится App ID, API Key и User Auth Key.
+  /// Для работы с Carrot quest для Flutter вам понадобится App ID, API Key и User Auth Key (либо ранее сгенерированный хэш для авторизации).
   /// Вы можете найти эти данные на вкладке Настройки > Разработчикам
   final String _appId = "";
   final String _apiKey = "";
@@ -117,8 +118,60 @@ class _MyAppState extends State<MyApp> {
                     return;
                   }
 
-                  Carrot.auth(id, _userAuthKey).then((value) {
+                  Carrot.auth(id, userAuthKey: _userAuthKey).then((value) {
                     Navigator.pop(context);
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: const Text("OK"),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  /// Auth user by hash
+  void _authHash(BuildContext con) {
+    TextEditingController controller = TextEditingController();
+    showModalBottomSheet(
+      context: con,
+      useSafeArea: true,
+      isScrollControlled: true,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+              right: 32,
+              top: 24,
+              left: 32,
+              bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextField(
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                    hintText: "Input your id (phone, email, etc...)",
+                    border: OutlineInputBorder()),
+                controller: controller,
+              ),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  String id = controller.text;
+
+                  if (id.isEmpty) {
+                    return;
+                  }
+
+                  getHash(id).then((hash) {
+                    Carrot.auth(id, userHash: hash).then((value) {
+                      Navigator.pop(context);
+                    });
                   });
                 },
                 child: Container(
@@ -417,6 +470,17 @@ class _MyAppState extends State<MyApp> {
                     child: const Padding(
                       padding: EdgeInsets.all(20),
                       child: Text("Auth user"),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Carrot.trackEvent("Tap button",
+                          params: {"Button": "Auth user by hash"});
+                      _authHash(mContext);
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Text("Auth user by hash"),
                     ),
                   ),
                   TextButton(

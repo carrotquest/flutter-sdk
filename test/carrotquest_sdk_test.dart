@@ -21,7 +21,7 @@ class MockCarrotquestSdkPlatform
   }
 
   @override
-  Future<void> auth(userId, userAuthKey) {
+  Future<void> auth(userId, {String? userAuthKey, String? userHash}) {
     return Future.value();
   }
 
