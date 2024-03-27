@@ -1,3 +1,6 @@
+## 0.0.5 
+- Fix bugs.
+
 ## 0.0.4 
 - Added the ability to authorize using a hash.
 
