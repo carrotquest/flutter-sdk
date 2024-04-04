@@ -154,6 +154,7 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         }
 
         val con = context
+        var was = false
         if (con != null) {
             Carrot.setup(con, apiKey!!, appId!!, object : Callback<Boolean> {
                 override fun onResponse(resultSetup: Boolean?) {
@@ -173,7 +174,10 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
                             })
                             result.success(null)
                         } else {
-                            result.error("Setup is failed", null, null)
+                            if (!was) {
+                                was = true
+                                result.error("Setup is failed", null, null)
+                            }
                         }
                     } catch (e: java.lang.Exception) {
                         //result.error("Setup is failed", null, null)
@@ -182,7 +186,10 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
                 override fun onFailure(t: Throwable?) {
                     pluginInitted = false
-                    result.error("Setup is failed: " + t.toString(), null, null)
+                    if (!was) {
+                        was = true
+                        result.error("Setup is failed: " + t.toString(), null, null)
+                    }
                 }
             })
         } else {

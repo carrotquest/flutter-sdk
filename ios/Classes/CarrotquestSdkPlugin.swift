@@ -57,12 +57,13 @@ public class CarrotquestSdkPlugin: NSObject, FlutterPlugin {
                 guard let self = self else { return }
                 self.channel?.invokeMethod("unreadConversationsCount", arguments: count)
             }
-            result(nil)
+//             result(nil)
         },
         errorHandler: { e in
-            result(FlutterError(code: "setup", message: "setup error", details: e))
+//             result(FlutterError(code: "setup", message: "setup error", details: e))
         }
     )
+    result(nil)
   }
 
     private func _openChat(with result: @escaping FlutterResult) {
