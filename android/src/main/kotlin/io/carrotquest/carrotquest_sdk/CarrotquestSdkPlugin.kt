@@ -2,6 +2,7 @@ package io.carrotquest.carrotquest_sdk
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.NonNull
@@ -15,6 +16,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import org.json.JSONObject
+import java.lang.Exception
 
 /** CarrotquestSdkPlugin */
 class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -158,26 +160,32 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             Carrot.setup(con, apiKey!!, appId!!, object : Callback<Boolean> {
                 override fun onResponse(resultSetup: Boolean?) {
                     pluginInitted = (resultSetup == true)
-                   
-                    try {
-                        if(resultSetup == true) {
-                            Carrot.setNotificationIcon(R.drawable.ic_cqsdk_notification)
-                            Carrot.setUnreadConversationsCallback(object : Callback<List<String>>{
-                                override fun onResponse(unreadConversationsIds: List<String>?) {
-                                    channel.invokeMethod("unreadConversationsCount", unreadConversationsIds?.size ?: 0)
-                                }
 
-                                override fun onFailure(t: Throwable?) {
+                     try {
+                         if(resultSetup == true) {
+                             val iconId = con.resources.getIdentifier("ic_cqsdk_notification", "drawable", con.packageName);
+                             if (iconId == 0) {
+                                 Carrot.setNotificationIcon(R.drawable.ic_cqsdk_def_notification)
+                             } else {
+                                 Carrot.setNotificationIcon(iconId)
+                             }
+
+                             Carrot.setUnreadConversationsCallback(object : Callback<List<String>>{
+                                 override fun onResponse(unreadConversationsIds: List<String>?) {
+                                     channel.invokeMethod("unreadConversationsCount", unreadConversationsIds?.size ?: 0)
+                                 }
+
+                                 override fun onFailure(t: Throwable?) {
                                     
-                                }
-                            })
-                            result.success(null)
-                        } else {
-                            result.error("Setup is failed", null, null)
-                        }
-                    } catch (e: java.lang.Exception) {
-                        //result.error("Setup is failed", null, null)
-                    }
+                                 }
+                             })
+                             result.success(null)
+                         } else {
+                             result.error("Setup is failed", null, null)
+                         }
+                     } catch (e: java.lang.Exception) {
+                         //result.error("Setup is failed", null, null)
+                     }
                 }
 
                 override fun onFailure(t: Throwable?) {
