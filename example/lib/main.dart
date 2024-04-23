@@ -51,7 +51,9 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    _initCarrotSdk().then((value) async {
+    _initCarrotSdk()
+        .onError((error, stackTrace) => debugPrint("$error"))
+        .then((value) async {
       Carrot.getUnreadConversationsCountStream().listen((count) {
         unreadConversationsCount = count;
         setState(() {});

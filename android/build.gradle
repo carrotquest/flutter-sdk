@@ -28,7 +28,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -60,7 +60,7 @@ android {
         testImplementation 'org.mockito:mockito-core:5.0.0'
 
         api 'com.google.firebase:firebase-messaging:23.2.0'
-        implementation 'io.carrotquest:android-sdk:1.0.77-commonRelease'
+        implementation 'io.carrotquest:android-sdk:1.0.79-commonRelease'
     }
 
     testOptions {

@@ -1,3 +1,6 @@
+## 0.0.7 
+- Fix bugs
+
 ## 0.0.6 
 - Added support for customizable placeholders for bot questions
 - Fix bugs.

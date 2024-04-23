@@ -24,8 +24,6 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     private var context: Context? = null
     private var activity: Activity? = null
 
-    private var pluginInitted = false
-
     private var appId: String? = null
     private var apiKey: String? = null
 
@@ -38,7 +36,7 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
         if (call.method == "setup") {
-            if (pluginInitted) {
+            if (Carrot.isInit()) {
                 result.error("Plugin is already initialized.", null, null)
                 return
             }
@@ -110,7 +108,7 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     // }
 
     private fun checkPluginInitiated(@NonNull result: MethodChannel.Result): Boolean {
-        if (!pluginInitted) {
+        if (!Carrot.isInit()) {
             result.error(
                 "The plugin hasn't been initialized yet. Do Carrot.io.carrotquest.carrotquest_sdk.setup(...) first .",
                 null,
@@ -123,12 +121,10 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
-        pluginInitted = false
         context = null
     }
 
     override fun onDetachedFromActivity() {
-        pluginInitted = false
         activity = null
     }
 
@@ -157,44 +153,36 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
         val con = context
         if (con != null) {
-            Carrot.setup(con, apiKey!!, appId!!, object : Callback<Boolean> {
-                override fun onResponse(resultSetup: Boolean?) {
-                    pluginInitted = (resultSetup == true)
+            try {
+                Carrot.setup(con, apiKey!!, appId!!)
+                
+                try {
+                    val iconId = con.resources.getIdentifier("ic_cqsdk_notification", "drawable", con.packageName);
+                    if (iconId == 0) {
+                        Carrot.setNotificationIcon(R.drawable.ic_cqsdk_def_notification)
+                    } else {
+                        Carrot.setNotificationIcon(iconId)
+                    }
 
-                     try {
-                         if(resultSetup == true) {
-                             val iconId = con.resources.getIdentifier("ic_cqsdk_notification", "drawable", con.packageName);
-                             if (iconId == 0) {
-                                 Carrot.setNotificationIcon(R.drawable.ic_cqsdk_def_notification)
-                             } else {
-                                 Carrot.setNotificationIcon(iconId)
-                             }
+                    Carrot.setUnreadConversationsCallback(object : Callback<List<String>>{
+                        override fun onResponse(unreadConversationsIds: List<String>?) {
+                            channel.invokeMethod("unreadConversationsCount", unreadConversationsIds?.size ?: 0)
+                        }
 
-                             Carrot.setUnreadConversationsCallback(object : Callback<List<String>>{
-                                 override fun onResponse(unreadConversationsIds: List<String>?) {
-                                     channel.invokeMethod("unreadConversationsCount", unreadConversationsIds?.size ?: 0)
-                                 }
-
-                                 override fun onFailure(t: Throwable?) {
-                                    
-                                 }
-                             })
-                             result.success(null)
-                         } else {
-                             result.error("Setup is failed", null, null)
-                         }
-                     } catch (e: java.lang.Exception) {
-                         //result.error("Setup is failed", null, null)
-                     }
+                        override fun onFailure(t: Throwable?) {
+                        
+                        }
+                    })
+                } catch (e: java.lang.Exception) {
+                     println("$e")
                 }
 
-                override fun onFailure(t: Throwable?) {
-                    pluginInitted = false
-                    result.error("Setup is failed: " + t.toString(), null, null)
-                }
-            })
+                result.success("true")
+            } catch(e: java.lang.Exception) {
+                result.success("false")
+            }
         } else {
-            result.error("Context is null", null, null)
+            result.success("false")
         }
     }
 
@@ -265,8 +253,6 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
                 if (con != null) {
                     Carrot.setup(con, apiKey!!, appId!!, object : Callback<Boolean> {
                         override fun onResponse(resultSetup: Boolean?) {
-                            pluginInitted = (resultSetup == true)
-
                             try {
                                 if(resultSetup == true) {
                                     result.success(null)
@@ -279,7 +265,6 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
                         }
 
                         override fun onFailure(t: Throwable?) {
-                            pluginInitted = false
                             result.error("Setup is failed: " + t.toString(), null, null)
                         }
                     })

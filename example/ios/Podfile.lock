@@ -1,8 +1,8 @@
 PODS:
   - carrotquest_sdk (0.0.1):
-    - CarrotquestSDK (= 2.12.0)
+    - CarrotquestSDK (= 2.12.1)
     - Flutter
-  - CarrotquestSDK (2.12.0)
+  - CarrotquestSDK (2.12.1)
   - Firebase/CoreOnly (10.12.0):
     - FirebaseCore (= 10.12.0)
   - Firebase/Messaging (10.12.0):
@@ -107,8 +107,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/integration_test/ios"
 
 SPEC CHECKSUMS:
-  carrotquest_sdk: 75ea7d4cfd1cedb3a5758a7d6478ef765d6cc73f
-  CarrotquestSDK: 2a1be48b1810e1148cfb316953398a044dd30df1
+  carrotquest_sdk: fee83d31ae1ccbe482c967c6424c26671db11352
+  CarrotquestSDK: bfb76db4bebb60cfbc0e52d7debfb7dd85974cf2
   Firebase: 07150e75d142fb9399f6777fa56a187b17f833a0
   firebase_core: e477125798fc37cd4ab43ca6a8536bf7e0929c00
   firebase_messaging: 334d68c3a36b6d4d5cd91e4f42509e0d4ae49828
