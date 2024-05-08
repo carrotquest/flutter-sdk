@@ -54,7 +54,7 @@ android {
 
 ```dart  
 Carrot.setup(apiKey, appId);  
-```  
+```
 
 <a name="auth"></a>
 ## Авторизация пользователей
@@ -64,17 +64,17 @@ Carrot.setup(apiKey, appId);
 Напрямую передать userAuthKey
 ```dart  
 Carrot.auth(userId, userAuthKey: _userAuthKey)  
-```  
+```
 
 Передать hash генерируемый у вас на бэке
 ```dart  
 Carrot.auth(id, userHash: _hash)
-```  
+```
 
 Чтобы сменить пользователя, нужно вызвать метод логаута:
 ```dart  
 Carrot.logOut();  
-```  
+```
 
 <a name="properties"></a>
 ## Свойства пользователей и события
@@ -82,12 +82,12 @@ Carrot.logOut();
 Вы можете установить необходимые свойства пользователя с помощью
 ```dart  
  Carrot.setUserProperty(userProperty);  
-```  
+```
 
 Для описания свойств пользователя используйте класс `UserProperty`
 ```dart  
  UserProperty(String key, String value);  
-```  
+```
 
 `Внимание!`  
 Поле `key` не может начинаться с символа `$`.
@@ -99,23 +99,36 @@ Carrot.logOut();
 Для отслеживания событий используйте метод `trackEvent()`. Вы также можете указать дополнительные параметры для события
 ```dart  
  Carrot.trackEvent(String event, {Map<String, String>? params});  
-```  
+```
 Вы можете получить количество диалогов, содержащих непрочитанные сообщения
 ```dart  
  Carrot.getUnreadConversationsCount();  
-```  
+```
 Также можно подписаться на изменения количества таких диалогов
 ```dart  
  Carrot.getUnreadConversationsCountStream();  
-```  
+```
 <a name="chat"></a>
 ## Чат с оператором
 Вы можете дать пользователю мобильного приложения возможность перейти в чат с оператором из любого места. Для этого используете
 ```dart  
  Carrot.openChat();  
-```  
+```
+
+Получить количество непрочитанных диалогов и список их ID:
+
+```dart  
+ Carrot.getUnreadConversationsCount();  
+```
+
+Подписаться на список непрочитанных диалогов:
+
+```dart  
+ Carrot.getUnreadConversationsCountStream();  
+```
 
 <a name="notifications"></a>
+
 ## Уведомления
 Для работы с push-уведомлениями SDK использует сервис Firebase Cloud Messaging. В связи с этим необходимо получить ключ и отправить его в Carrot. Вы можете найти поле для ввода ключа на вкладке Настройки > Разработчикам. Процесс настройки сервиса Firebase Cloud Messaging описан [здесь](https://firebase.google.com/docs/cloud-messaging?authuser=0)
 
