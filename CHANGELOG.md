@@ -1,3 +1,6 @@
+## 0.0.9
+- Added support for `isInit` method on Android
+
 ## 0.0.8
 - More bugs fix
 

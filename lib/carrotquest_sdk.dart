@@ -74,4 +74,11 @@ class Carrot {
   static Future<void> pushCampaignsUnsubscribe() {
     return CarrotquestSdkPlatform.instance.pushCampaignsUnsubscribe();
   }
+
+  /// Check whether the sdk is initialized
+  ///
+  /// Currently implemented for Android only.
+  static Future<bool> isInit() {
+    return CarrotquestSdkPlatform.instance.isInit();
+  }
 }

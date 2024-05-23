@@ -100,6 +100,11 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             return
         }
 
+        if (call.method == "isInit") {
+            isInit(result);
+            return;
+        }
+
         result.notImplemented()
     }
 
@@ -405,6 +410,15 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         try {
             Carrot.pushCampaignsUnsubscribe()
             result.success(null)
+        } catch (e: Exception) {
+            result.error(e.localizedMessage, null, null)
+        }
+    }
+
+    private fun isInit(@NonNull result: MethodChannel.Result) {
+        try {
+            val isInit = Carrot.isInit()
+            result.success(isInit)
         } catch (e: Exception) {
             result.error(e.localizedMessage, null, null)
         }
