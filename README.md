@@ -56,6 +56,13 @@ android {
 Carrot.setup(apiKey, appId);  
 ```
 
+На Android у Вас может возникнуть ошибка при попытке инициализации SDK. Для избежания таких случаев, убедитесь что проверили статус инициализации SDK:
+
+```dart  
+final isInit = await Carrot.isInit();
+if (isInit) return;
+```
+
 <a name="auth"></a>
 ## Авторизация пользователей
 
