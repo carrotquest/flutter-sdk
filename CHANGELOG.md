@@ -1,5 +1,8 @@
 ## 0.0.9
 - Added support for `isInit` method on Android
+- Improved behavior when there is no internet connection
+- Worked on notifications and fixed bugs
+- Fixed other minor bugs
 
 ## 0.0.8
 - More bugs fix
