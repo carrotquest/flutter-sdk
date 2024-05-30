@@ -69,6 +69,11 @@ class MockCarrotquestSdkPlatform
   Future<void> pushNotificationsUnsubscribe() {
     return Future.value();
   }
+
+  @override
+  Future<bool> isInit() {
+    return Future.value(true);
+  }
 }
 
 void main() {

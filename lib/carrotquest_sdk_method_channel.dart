@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:carrotquest_sdk/user_property/user_property.dart';
 import 'package:flutter/foundation.dart';
@@ -120,5 +121,16 @@ class MethodChannelCarrotquestSdk extends CarrotquestSdkPlatform {
     return methodChannel
         .invokeMethod<String>('pushCampaignsUnsubscribe')
         .then((value) => value);
+  }
+
+  @override
+  Future<bool> isInit() async {
+    if (!Platform.isAndroid) {
+      throw UnimplementedError('isInit is not implemented for this platform');
+    }
+
+    bool isInit = await methodChannel.invokeMethod('isInit');
+
+    return isInit;
   }
 }

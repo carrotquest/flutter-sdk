@@ -80,4 +80,8 @@ abstract class CarrotquestSdkPlatform extends PlatformInterface {
     throw UnimplementedError(
         'pushCampaignsUnsubscribe() has not been implemented.');
   }
+
+  Future<bool> isInit() {
+    throw UnimplementedError('isInit() has not been implemented.');
+  }
 }
