@@ -1,3 +1,8 @@
+## 0.0.10
+- iPadOS minimum support added
+- Fix UI when rotate screen (iOS)
+- Fix send file logic (iOS)
+
 ## 0.0.9
 - Added support for `isInit` method on Android
 - Improved behavior when there is no internet connection
