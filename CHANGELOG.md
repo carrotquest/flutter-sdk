@@ -1,3 +1,8 @@
+## 0.0.11
+- Fixed the bug with file uploading
+- Fixed the bug with class visibility after obfuscation
+- Now the auth returns the value of the carrot_id field (Android)
+
 ## 0.0.10
 - iPadOS minimum support added
 - Fix UI when rotate screen (iOS)

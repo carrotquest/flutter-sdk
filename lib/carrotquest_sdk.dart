@@ -9,7 +9,7 @@ class Carrot {
   }
 
   /// Authentification user
-  static Future<void> auth(String userId,
+  static Future<String?> auth(String userId,
       {String? userAuthKey, String? userHash}) {
     return CarrotquestSdkPlatform.instance.auth(
       userId,

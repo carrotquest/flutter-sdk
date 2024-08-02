@@ -32,14 +32,14 @@ class MethodChannelCarrotquestSdk extends CarrotquestSdkPlatform {
   }
 
   @override
-  Future<void> auth(String userId,
+  Future<String?> auth(String userId,
       {String? userAuthKey, String? userHash}) async {
-    await methodChannel.invokeMethod<String>('auth', {
+    String? carrotId = await methodChannel.invokeMethod<String>('auth', {
       'user_id': userId,
       'user_auth_key': userAuthKey,
       'user_hash': userHash
     });
-    return;
+    return carrotId;
   }
 
   @override

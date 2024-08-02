@@ -207,10 +207,10 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
 
         if (userHash !== null) {
-            Carrot.hashedAuth(userId, userHash, object : Callback<Boolean> {
-                override fun onResponse(resultAuth: Boolean?) {
-                    if(resultAuth == true) {
-                        result.success(null)
+            Carrot.hashedAuth(userId, userHash, object : Callback<String> {
+                override fun onResponse(resultAuth: String?) {
+                    if(resultAuth != null) {
+                        result.success(resultAuth)
                     } else {
                         result.error("Auth is failed", null, null)
                     }
@@ -223,10 +223,10 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             return
         }
 
-         Carrot.auth(userId, userAuthKey, object : Callback<Boolean> {
-            override fun onResponse(resultAuth: Boolean?) {
-                if(resultAuth == true) {
-                    result.success(null)
+         Carrot.auth(userId, userAuthKey, object : Callback<String> {
+            override fun onResponse(resultAuth: String?) {
+                if(resultAuth != null) {
+                    result.success(resultAuth)
                 } else {
                     result.error("Auth is failed", null, null)
                 }
