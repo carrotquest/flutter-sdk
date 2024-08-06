@@ -81,8 +81,8 @@ private func _auth(with call: FlutterMethodCall, and result: @escaping FlutterRe
 
         if userAuthKey == nil {
             if let unwrappedUserHash = userHash {
-                Carrot.shared.hashedAuth(withUserId: userId, withHash: unwrappedUserHash, successHandler: {
-                    result("")
+                Carrot.shared.hashedAuth(withUserId: userId, withHash: unwrappedUserHash, successHandler: { carrotId in
+                    result(carrotId)
                 }, errorHandler: { e in result(FlutterError(code: "auth", message: "auth error", details: e))})
                 return
             } else {
@@ -90,8 +90,8 @@ private func _auth(with call: FlutterMethodCall, and result: @escaping FlutterRe
             }
         }
         if let unwrappeduserAuthKey = userAuthKey {
-            Carrot.shared.auth(withUserId: userId, withUserAuthKey: unwrappeduserAuthKey, successHandler: {
-                result("")
+            Carrot.shared.auth(withUserId: userId, withUserAuthKey: unwrappeduserAuthKey, successHandler: { carrotId in
+                result(carrotId)
             }, errorHandler: { e in result(FlutterError(code: "auth", message: "auth error", details: e))})
         }
     }

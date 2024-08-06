@@ -120,7 +120,11 @@ class _MyAppState extends State<MyApp> {
                     return;
                   }
 
-                  Carrot.auth(id, userAuthKey: _userAuthKey).then((value) {
+                  Carrot.auth(id, userAuthKey: _userAuthKey).then((carrotId) {
+                    String message = carrotId ?? "id - null";
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(message),
+                    ));
                     Navigator.pop(context);
                   });
                 },
@@ -171,7 +175,11 @@ class _MyAppState extends State<MyApp> {
                   }
 
                   getHash(id).then((hash) {
-                    Carrot.auth(id, userHash: hash).then((value) {
+                    Carrot.auth(id, userHash: hash).then((carrotId) {
+                      String message = carrotId ?? "id - null";
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(message),
+                      ));
                       Navigator.pop(context);
                     });
                   });
