@@ -70,15 +70,18 @@ if (isInit) return;
 
 Напрямую передать userAuthKey
 ```dart  
-Carrot.auth(userId, userAuthKey: _userAuthKey)  
+String? carrotId = await Carrot.auth(userId, userAuthKey: _userAuthKey)  
 ```
 
 Передать hash генерируемый у вас на бэке
 ```dart  
-Carrot.auth(id, userHash: _hash)
+String? carrotId = await Carrot.auth(id, userHash: _hash)
 ```
 
+Методы auth возвращает CarrotID, который является уникальным идентификатором пользователя в сервисе. 
+
 Чтобы сменить пользователя, нужно вызвать метод логаута:
+
 ```dart  
 Carrot.logOut();  
 ```

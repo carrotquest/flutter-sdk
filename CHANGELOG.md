@@ -1,3 +1,6 @@
+## 0.0.12
+- Now the auth returns the value of the carrot_id field (iOS)
+
 ## 0.0.11
 - Fixed the bug with file uploading
 - Fixed the bug with class visibility after obfuscation
