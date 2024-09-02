@@ -133,4 +133,10 @@ class MethodChannelCarrotquestSdk extends CarrotquestSdkPlatform {
 
     return isInit;
   }
+
+  @override
+  Future<void> trackScreen(String screen) {
+    return methodChannel.invokeMethod<String>(
+        'trackScreen', {'screen': screen}).then((value) => value);
+  }
 }

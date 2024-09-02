@@ -81,4 +81,8 @@ class Carrot {
   static Future<bool> isInit() {
     return CarrotquestSdkPlatform.instance.isInit();
   }
+
+  static Future<void> trackScreen(String screen) {
+    return CarrotquestSdkPlatform.instance.trackScreen(screen);
+  }
 }

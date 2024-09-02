@@ -84,4 +84,9 @@ abstract class CarrotquestSdkPlatform extends PlatformInterface {
   Future<bool> isInit() {
     throw UnimplementedError('isInit() has not been implemented.');
   }
+
+  Future<void> trackScreen(String screen) {
+    throw UnimplementedError(
+        'trackScreen(String screen) has not been implemented.');
+  }
 }

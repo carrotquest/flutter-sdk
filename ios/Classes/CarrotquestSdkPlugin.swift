@@ -39,6 +39,8 @@ public class CarrotquestSdkPlugin: NSObject, FlutterPlugin {
           self._pushNotificationsUnsubscribe()
       case "pushCampaignsUnsubscribe":
           self._pushCampaignsUnsubscribe()
+    case "trackScreen":
+          self._trackScreen(with: call, and: result)
       default:
           result(FlutterMethodNotImplemented)
       }
@@ -149,6 +151,14 @@ private func _auth(with call: FlutterMethodCall, and result: @escaping FlutterRe
 
     private func _pushCampaignsUnsubscribe() {
         CarrotNotificationService.shared.pushCampaignsUnsubscribe()
+    }
+
+    private func _trackScreen(with call: FlutterMethodCall, and result: @escaping FlutterResult) {
+        guard let args = call.arguments as? NSDictionary else { return }
+        guard let screen = args["screen"] as? String else { return }
+        
+        Carrot.shared.trackScreen(screen)
+        result(nil)
     }
 }
 

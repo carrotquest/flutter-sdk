@@ -1,6 +1,6 @@
 name: carrotquest_sdk
 description: Conversational platform for business. Flutter sdk.
-version: 0.0.12
+version: 0.0.13
 
 repository: https://github.com/carrotquest/flutter-sdk  
 homepage: https://www.carrotquest.io/

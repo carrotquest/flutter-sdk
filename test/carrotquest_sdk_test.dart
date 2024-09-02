@@ -74,6 +74,11 @@ class MockCarrotquestSdkPlatform
   Future<bool> isInit() {
     return Future.value(true);
   }
+
+  @override
+  Future<void> trackScreen(String screen) {
+    return Future.value();
+  }
 }
 
 void main() {

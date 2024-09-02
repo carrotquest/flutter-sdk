@@ -105,6 +105,11 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             return;
         }
 
+        if (call.method == "trackScreen") {
+            trackScreen(call, result);
+            return;
+        }
+
         result.notImplemented()
     }
 
@@ -419,6 +424,23 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         try {
             val isInit = Carrot.isInit()
             result.success(isInit)
+        } catch (e: Exception) {
+            result.error(e.localizedMessage, null, null)
+        }
+    }
+
+    private fun trackScreen(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
+        if (!checkPluginInitiated(result)) {
+            return
+        }
+        try {
+            val screen = call.argument<String?>("screen")
+            if(screen == null) {
+                result.error("Screen is empty", null, null)
+                return
+            }
+
+            Carrot.trackScreen(screen)
         } catch (e: Exception) {
             result.error(e.localizedMessage, null, null)
         }

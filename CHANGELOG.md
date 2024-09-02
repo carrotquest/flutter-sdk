@@ -1,3 +1,6 @@
+## 0.0.13
+- Fixed chat lags on Android
+
 ## 0.0.12
 - Now the auth returns the value of the carrot_id field (iOS)
 

@@ -447,6 +447,33 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  void _showTrackScreenBottomSheet(BuildContext con) {
+    showModalBottomSheet(
+      context: con,
+      useSafeArea: true,
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          child: DropdownButton(
+            hint: const Text("Select a screen"),
+            isExpanded: true,
+            items: const [
+              DropdownMenuItem(value: "screen1", child: Text("screen1")),
+              DropdownMenuItem(value: "screen2", child: Text("screen2")),
+              DropdownMenuItem(value: "screen3", child: Text("screen3")),
+            ],
+            onChanged: (screen) {
+              if (screen != null) {
+                Carrot.trackScreen(screen);
+              }
+            },
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -468,98 +495,110 @@ class _MyAppState extends State<MyApp> {
               icon: const Icon(Icons.chat),
             ),
             body: Builder(builder: (mContext) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Carrot.trackEvent("Tap button",
-                          params: {"Button": "Auth user"});
-                      _auth(mContext);
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Text("Auth user"),
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Carrot.trackEvent("Tap button",
+                            params: {"Button": "Auth user"});
+                        _auth(mContext);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text("Auth user"),
+                      ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Carrot.trackEvent("Tap button",
-                          params: {"Button": "Auth user by hash"});
-                      _authHash(mContext);
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Text("Auth user by hash"),
+                    TextButton(
+                      onPressed: () {
+                        Carrot.trackEvent("Tap button",
+                            params: {"Button": "Auth user by hash"});
+                        _authHash(mContext);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text("Auth user by hash"),
+                      ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Carrot.trackEvent("Tap button",
-                          params: {"Button": "Change system properties"});
-                      _changeSystemProperty(mContext);
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Text("Change system properties"),
+                    TextButton(
+                      onPressed: () {
+                        Carrot.trackEvent("Tap button",
+                            params: {"Button": "Change system properties"});
+                        _changeSystemProperty(mContext);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text("Change system properties"),
+                      ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Carrot.trackEvent("Tap button",
-                          params: {"Button": "Change ecommerce properties"});
-                      _changeEcommerceProperty(mContext);
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Text("Change ecommerce properties"),
+                    TextButton(
+                      onPressed: () {
+                        Carrot.trackEvent("Tap button",
+                            params: {"Button": "Change ecommerce properties"});
+                        _changeEcommerceProperty(mContext);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text("Change ecommerce properties"),
+                      ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Carrot.trackEvent("Tap button",
-                          params: {"Button": "Change custom properties"});
-                      _changeCustomProperty(mContext);
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Text("Change custom properties"),
+                    TextButton(
+                      onPressed: () {
+                        Carrot.trackEvent("Tap button",
+                            params: {"Button": "Change custom properties"});
+                        _changeCustomProperty(mContext);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text("Change custom properties"),
+                      ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Carrot.trackEvent("Tap 'show push' button");
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Text("Show push"),
+                    TextButton(
+                      onPressed: () {
+                        Carrot.trackEvent("Tap 'show push' button");
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text("Show push"),
+                      ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Carrot.trackEvent("Tap button",
-                          params: {"Button": "Unsubscribe push notifications"});
-                      _unsubscribePushNotifications(mContext);
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Text("Unsubscribe push notifications"),
+                    TextButton(
+                      onPressed: () {
+                        Carrot.trackEvent("Tap button", params: {
+                          "Button": "Unsubscribe push notifications"
+                        });
+                        _unsubscribePushNotifications(mContext);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text("Unsubscribe push notifications"),
+                      ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Carrot.trackEvent("Tap button",
-                          params: {"Button": "Log out"}).then((value) {
-                        Carrot.logOut();
-                      });
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Text("Log out"),
+                    TextButton(
+                      onPressed: () {
+                        _showTrackScreenBottomSheet(mContext);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text("Simulate screen tracking"),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 30),
-                ],
+                    TextButton(
+                      onPressed: () {
+                        Carrot.trackEvent("Tap button",
+                            params: {"Button": "Log out"}).then((value) {
+                          Carrot.logOut();
+                        });
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text("Log out"),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                  ],
+                ),
               );
             })));
   }
