@@ -1,3 +1,7 @@
+## 0.0.14
+- Added support for in-app navigation tracking
+- Fixed bugs
+
 ## 0.0.13
 - Fixed chat lags on Android
 

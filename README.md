@@ -110,6 +110,10 @@ Carrot.logOut();
 ```dart  
  Carrot.trackEvent(String event, {Map<String, String>? params});  
 ```
+В SDK есть возможность трекинга навигации внутри приложения для того, чтобы при необходимости запускать различные триггерные сообщения на определенных экранах. Для этого используйте метод
+```dart  
+Carrot.trackScreen(screenName);
+```
 Вы можете получить количество диалогов, содержащих непрочитанные сообщения
 ```dart  
  Carrot.getUnreadConversationsCount();  
