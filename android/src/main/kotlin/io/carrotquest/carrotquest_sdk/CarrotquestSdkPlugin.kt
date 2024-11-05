@@ -161,7 +161,7 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             return
         }
 
-        val con = context
+        val con = activity ?: context
         if (con != null) {
             try {
                 Carrot.setup(con, apiKey!!, appId!!)
@@ -309,7 +309,7 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             call.argument<Map<String, Any>>("data") ?: HashMap<String, Any>()
             
         //Bundle().put
-        val message = RemoteMessage(bundle)
+        
         bundle.putString("id", data["id"]?.toString() ?: "")
         bundle.putString("title", data["title"]?.toString() ?: "")
         bundle.putString("body", data["body"]?.toString() ?: "")
@@ -317,13 +317,11 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         bundle.putString("conversation_type", data["conversation_type"]?.toString() ?: "")
         bundle.putString("sent_via", data["sent_via"]?.toString() ?: "")
         bundle.putString("body_json", data["body_json"]?.toString() ?: "")
-//        bundle.putBoolean(
-//            "is_carrot",
-//            java.lang.Boolean.parseBoolean(data["is_carrot"]?.toString() ?: "False")
-//        )
+
         bundle.putString("is_carrot", data["is_carrot"]?.toString() ?: "")
         bundle.putString("direction", data["direction"]?.toString() ?: "")
 
+        val message = RemoteMessage(bundle)
         Carrot.sendFirebasePushNotification(message, if(activity == null) context else activity)
 
         result.success(null)

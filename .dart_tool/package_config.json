@@ -41,7 +41,7 @@
       "name": "flutter",
       "rootUri": "file:///Users/nikitabotalov/devs/flutter/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "3.3"
     },
     {
       "name": "flutter_lints",
@@ -53,25 +53,25 @@
       "name": "flutter_test",
       "rootUri": "file:///Users/nikitabotalov/devs/flutter/packages/flutter_test",
       "packageUri": "lib/",
-      "languageVersion": "3.2"
+      "languageVersion": "3.3"
     },
     {
       "name": "leak_tracker",
-      "rootUri": "file:///Users/nikitabotalov/.pub-cache/hosted/pub.dev/leak_tracker-10.0.0",
+      "rootUri": "file:///Users/nikitabotalov/.pub-cache/hosted/pub.dev/leak_tracker-10.0.5",
       "packageUri": "lib/",
-      "languageVersion": "3.1"
+      "languageVersion": "3.2"
     },
     {
       "name": "leak_tracker_flutter_testing",
-      "rootUri": "file:///Users/nikitabotalov/.pub-cache/hosted/pub.dev/leak_tracker_flutter_testing-2.0.1",
+      "rootUri": "file:///Users/nikitabotalov/.pub-cache/hosted/pub.dev/leak_tracker_flutter_testing-3.0.5",
       "packageUri": "lib/",
-      "languageVersion": "3.1"
+      "languageVersion": "3.2"
     },
     {
       "name": "leak_tracker_testing",
-      "rootUri": "file:///Users/nikitabotalov/.pub-cache/hosted/pub.dev/leak_tracker_testing-2.0.1",
+      "rootUri": "file:///Users/nikitabotalov/.pub-cache/hosted/pub.dev/leak_tracker_testing-3.0.1",
       "packageUri": "lib/",
-      "languageVersion": "3.1"
+      "languageVersion": "3.2"
     },
     {
       "name": "lints",
@@ -87,13 +87,13 @@
     },
     {
       "name": "material_color_utilities",
-      "rootUri": "file:///Users/nikitabotalov/.pub-cache/hosted/pub.dev/material_color_utilities-0.8.0",
+      "rootUri": "file:///Users/nikitabotalov/.pub-cache/hosted/pub.dev/material_color_utilities-0.11.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/nikitabotalov/.pub-cache/hosted/pub.dev/meta-1.11.0",
+      "rootUri": "file:///Users/nikitabotalov/.pub-cache/hosted/pub.dev/meta-1.15.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -147,9 +147,9 @@
     },
     {
       "name": "test_api",
-      "rootUri": "file:///Users/nikitabotalov/.pub-cache/hosted/pub.dev/test_api-0.6.1",
+      "rootUri": "file:///Users/nikitabotalov/.pub-cache/hosted/pub.dev/test_api-0.7.2",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.2"
     },
     {
       "name": "vector_math",
@@ -159,9 +159,9 @@
     },
     {
       "name": "vm_service",
-      "rootUri": "file:///Users/nikitabotalov/.pub-cache/hosted/pub.dev/vm_service-13.0.0",
+      "rootUri": "file:///Users/nikitabotalov/.pub-cache/hosted/pub.dev/vm_service-14.2.5",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "3.3"
     },
     {
       "name": "carrotquest_sdk",
@@ -170,7 +170,10 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2024-09-02T14:15:33.164705Z",
+  "generated": "2024-11-05T07:07:05.362721Z",
   "generator": "pub",
-  "generatorVersion": "3.3.0"
+  "generatorVersion": "3.5.3",
+  "flutterRoot": "file:///Users/nikitabotalov/devs/flutter",
+  "flutterVersion": "3.24.3",
+  "pubCache": "file:///Users/nikitabotalov/.pub-cache"
 }

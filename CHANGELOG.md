@@ -1,3 +1,7 @@
+## 0.0.15
+- Added a phone mask for bot responses
+- Fixed bugs
+
 ## 0.0.14
 - Added support for in-app navigation tracking
 - Fixed bugs
