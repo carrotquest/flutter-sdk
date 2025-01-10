@@ -61,7 +61,7 @@ android {
         testImplementation 'org.mockito:mockito-core:5.0.0'
 
         api 'com.google.firebase:firebase-messaging:23.2.0'
-        implementation 'io.carrotquest:android-sdk:1.0.89-commonRelease'
+        implementation 'io.carrotquest:android-sdk:1.0.90-commonRelease'
     }
 
     testOptions {
