@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'com.android.tools.build:gradle:8.3.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -44,6 +44,10 @@ android {
         test.java.srcDirs += 'src/test/kotlin'
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         minSdkVersion 19
         multiDexEnabled true
@@ -61,7 +65,7 @@ android {
         testImplementation 'org.mockito:mockito-core:5.0.0'
 
         api 'com.google.firebase:firebase-messaging:23.2.0'
-        implementation 'io.carrotquest:android-sdk:1.0.90-commonRelease'
+        implementation 'io.carrotquest:android-sdk:1.0.91-commonRelease'
     }
 
     testOptions {
