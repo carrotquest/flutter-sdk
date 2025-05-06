@@ -1,3 +1,15 @@
+## 0.0.20
+- Reduced the supported Java version
+- Fixed bugs
+
+## 0.0.19
+- Upgrade Android SDK
+- Upgrade iOS SDK
+
+## 0.0.18
+- Upgrade Android SDK
+- Upgrade iOS SDK
+
 ## 0.0.17
 - Upgrade AndroidSDK
 
