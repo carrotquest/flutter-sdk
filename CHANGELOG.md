@@ -1,3 +1,7 @@
+## 0.0.21 – AGP 8 compatibility
+- Removed deprecated package attribute from AndroidManifest
+- Added android.namespace to build.gradle
+
 ## 0.0.20
 - Reduced the supported Java version
 - Fixed bugs
