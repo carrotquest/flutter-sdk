@@ -1,5 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="io.carrotquest.carrotquest_sdk">
-
-
-</manifest>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"></manifest>
