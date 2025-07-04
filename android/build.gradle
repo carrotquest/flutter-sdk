@@ -28,6 +28,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    namespace "io.carrotquest.carrotquest_sdk"
     compileSdkVersion 34
 
     compileOptions {
@@ -64,12 +65,13 @@ android {
 
     dependencies {
         coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+        implementation 'com.android.support:multidex:1.0.3'
 
         testImplementation 'org.jetbrains.kotlin:kotlin-test'
         testImplementation 'org.mockito:mockito-core:5.0.0'
 
         api 'com.google.firebase:firebase-messaging:23.2.0'
-        implementation 'io.carrotquest:android-sdk:1.0.95-commonRelease'
+        implementation 'io.carrotquest:android-sdk:1.0.97-commonRelease'
     }
 
     testOptions {

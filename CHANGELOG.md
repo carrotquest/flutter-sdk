@@ -1,3 +1,8 @@
+## 0.0.21
+- Upgraded AndroidSDK
+- Supported AGP 8.x
+- Fixed bugs
+
 ## 0.0.20
 - Reduced the supported Java version
 - Fixed bugs

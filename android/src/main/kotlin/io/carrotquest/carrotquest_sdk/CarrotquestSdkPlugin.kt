@@ -153,7 +153,6 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         @NonNull call: MethodCall,
         @NonNull result: MethodChannel.Result,
     ) {
-
         apiKey = call.argument<String?>("api_key")
         appId = call.argument<String?>("app_id")
         if (apiKey == null || appId == null) {
@@ -164,30 +163,42 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         val con = activity ?: context
         if (con != null) {
             try {
-                Carrot.setup(con, apiKey!!, appId!!)
-                
-                try {
-                    val iconId = con.resources.getIdentifier("ic_cqsdk_notification", "drawable", con.packageName);
-                    if (iconId == 0) {
-                        Carrot.setNotificationIcon(R.drawable.ic_cqsdk_def_notification)
-                    } else {
-                        Carrot.setNotificationIcon(iconId)
+                Carrot.setup(con, apiKey!!, appId!!, object : Carrot.Callback<Boolean> { 
+                    override fun onResponse(r: Boolean?) {
+                        val res = r ?: false
+                        if (res) {
+                            try {
+                                val iconId = con.resources.getIdentifier("ic_cqsdk_notification", "drawable", con.packageName);
+                                if (iconId == 0) {
+                                    Carrot.setNotificationIcon(R.drawable.ic_cqsdk_def_notification)
+                                } else {
+                                    Carrot.setNotificationIcon(iconId)
+                                }
+
+                                Carrot.setUnreadConversationsCallback(object : Callback<List<String>>{
+                                    override fun onResponse(unreadConversationsIds: List<String>?) {
+                                        channel.invokeMethod("unreadConversationsCount", unreadConversationsIds?.size ?: 0)
+                                    }
+
+                                    override fun onFailure(t: Throwable?) {
+                                    
+                                    }
+                                })
+                            } catch (e: java.lang.Exception) {
+                                println("$e")
+                            }
+                            result.success("true")
+                        } else {
+                            result.success("false")
+                        }
                     }
 
-                    Carrot.setUnreadConversationsCallback(object : Callback<List<String>>{
-                        override fun onResponse(unreadConversationsIds: List<String>?) {
-                            channel.invokeMethod("unreadConversationsCount", unreadConversationsIds?.size ?: 0)
-                        }
-
-                        override fun onFailure(t: Throwable?) {
-                        
-                        }
-                    })
-                } catch (e: java.lang.Exception) {
-                     println("$e")
-                }
-
-                result.success("true")
+                    override fun onFailure(t: Throwable?) {
+                         result.success("false")
+                    }
+                })
+                
+                
             } catch(e: java.lang.Exception) {
                 result.success("false")
             }

@@ -4,7 +4,7 @@ import 'carrotquest_sdk_platform_interface.dart';
 
 class Carrot {
   /// Setup SDK
-  static Future<void> setup(String appId, String apiKey, {String? appGroup}) {
+  static Future<bool> setup(String appId, String apiKey, {String? appGroup}) {
     return CarrotquestSdkPlatform.instance.setup(appId, apiKey, appGroup);
   }
 

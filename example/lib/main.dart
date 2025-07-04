@@ -51,9 +51,10 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
-    _initCarrotSdk()
-        .onError((error, stackTrace) => debugPrint("$error"))
-        .then((value) async {
+    _initCarrotSdk().onError((error, stackTrace) {
+      debugPrint("$error");
+      return false;
+    }).then((value) async {
       Carrot.getUnreadConversationsCountStream().listen((count) {
         unreadConversationsCount = count;
         setState(() {});
@@ -61,9 +62,9 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  Future<void> _initCarrotSdk() {
+  Future<bool> _initCarrotSdk() {
     return Carrot.setup(_appId, _apiKey, appGroup: _appGroup)
-        .then((value) async {
+        .then((initResult) async {
       await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform);
       await FirebaseMessaging.instance.setAutoInitEnabled(true);
@@ -83,12 +84,15 @@ class _MyAppState extends State<MyApp> {
           }
         });
       }
+
+      return initResult;
     });
   }
 
   /// Auth user
   void _auth(BuildContext con) {
     TextEditingController controller = TextEditingController();
+
     showModalBottomSheet(
       context: con,
       useSafeArea: true,

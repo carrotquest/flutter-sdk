@@ -16,8 +16,8 @@ class MockCarrotquestSdkPlatform
   }
 
   @override
-  Future<void> setup(String appId, String apiKey, String? appGroup) {
-    return Future.value();
+  Future<bool> setup(String appId, String apiKey, String? appGroup) {
+    return Future.value(true);
   }
 
   @override

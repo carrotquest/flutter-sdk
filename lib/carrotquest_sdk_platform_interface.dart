@@ -28,7 +28,7 @@ abstract class CarrotquestSdkPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<void> setup(String appId, String apiKey, String? appGroup) {
+  Future<bool> setup(String appId, String apiKey, String? appGroup) {
     throw UnimplementedError('setup() has not been implemented.');
   }
 

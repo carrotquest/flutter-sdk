@@ -34,7 +34,7 @@ import 'package:carrotquest_sdk/carrotquest_sdk.dart';
 ```
 
 ### Дополнительная настройка для Android
-В Android-чатси вашего проекта нужно включить поддержку multiDex. Для этого в файл `build.gradle` добавьте строку:
+В Android-части вашего проекта нужно включить поддержку multiDex. Для этого в файл `build.gradle` добавьте строку:
 ```groovy
 android {
     ...
@@ -43,6 +43,13 @@ android {
         multiDexEnabled true
     }
 }
+```
+
+Если вы используете proguard, то, возможно, для корректрой работы в файл proguard-rules.pro нужно добавить следующие строчки:
+```
+-keep class **.R$* { *; }
+-keep class org.xmlpull.v1.** { *; }
+-keep interface org.xmlpull.v1.** { *; }
 ```
 
 <a name="init"></a>
