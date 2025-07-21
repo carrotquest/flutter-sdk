@@ -59,7 +59,7 @@ public class CarrotquestSdkPlugin: NSObject, FlutterPlugin {
                 guard let self = self else { return }
                 self.channel?.invokeMethod("unreadConversationsCount", arguments: count)
             }
-            result(nil)
+            result("true")
         },
         errorHandler: { e in
             result(FlutterError(code: "setup", message: "setup error", details: e))

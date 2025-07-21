@@ -1,3 +1,7 @@
+## 0.0.22
+- Upgraded AndroidSDK
+- Fixed initialization result for iOS
+
 ## 0.0.21
 - Upgraded AndroidSDK
 - Supported AGP 8.x
