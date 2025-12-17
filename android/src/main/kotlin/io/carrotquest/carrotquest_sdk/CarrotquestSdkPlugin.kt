@@ -154,8 +154,7 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         @NonNull result: MethodChannel.Result,
     ) {
         apiKey = call.argument<String?>("api_key")
-        appId = call.argument<String?>("app_id")
-        if (apiKey == null || appId == null) {
+        if (apiKey == null) {
             result.error("An error has occurred, the apiKey or appId is null.", null, null)
             return
         }
@@ -163,7 +162,7 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         val con = activity ?: context
         if (con != null) {
             try {
-                Carrot.setup(con, apiKey!!, appId!!, object : Carrot.Callback<Boolean> { 
+                Carrot.setup(con, apiKey!!, object : Carrot.Callback<Boolean> { 
                     override fun onResponse(r: Boolean?) {
                         val res = r ?: false
                         if (res) {
@@ -258,8 +257,8 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             return
         }
 
-        if (apiKey == null || appId == null) {
-            result.error("An error has occurred, the apiKey or appId is null.", null, null)
+        if (apiKey == null) {
+            result.error("An error has occurred, the apiKey is null.", null, null)
             return
         }
 
@@ -272,7 +271,7 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
                 val con = context
                 if (con != null) {
-                    Carrot.setup(con, apiKey!!, appId!!, object : Callback<Boolean> {
+                    Carrot.setup(con, apiKey!!, object : Callback<Boolean> {
                         override fun onResponse(resultSetup: Boolean?) {
                             try {
                                 if(resultSetup == true) {

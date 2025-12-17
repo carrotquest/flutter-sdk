@@ -1,3 +1,7 @@
+## 0.0.23
+- Upgraded AndroidSDK
+- Upgrade iOS SDK
+
 ## 0.0.22
 - Upgraded AndroidSDK
 - Fixed initialization result for iOS

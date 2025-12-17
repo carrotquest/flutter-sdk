@@ -18,12 +18,15 @@ rootProject.allprojects {
     repositories {
         google()
         jcenter()
-        maven { url "https://raw.github.com/carrotquest/android-sdk/carrotquest" }
+        maven { url "https://raw.githubusercontent.com/carrotquest/android-sdk/carrotquest" }
         maven { url "https://jitpack.io" }
     }
 }
 
-
+// plugins {
+//     id 'com.android.library'
+//     id 'kotlin-android'
+// }
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
@@ -71,7 +74,7 @@ android {
         testImplementation 'org.mockito:mockito-core:5.0.0'
 
         api 'com.google.firebase:firebase-messaging:23.2.0'
-        implementation 'io.carrotquest:android-sdk:1.0.98-commonRelease'
+        implementation 'io.carrotquest:android-sdk:2.0.0-commonRelease'
     }
 
     testOptions {
