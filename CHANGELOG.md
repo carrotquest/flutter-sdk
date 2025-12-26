@@ -1,3 +1,7 @@
+## 0.0.24
+- Fixed the bug with userAgent for Android
+- Added validation for the correctness of the apiKey for Android
+
 ## 0.0.23
 - Upgraded AndroidSDK
 - Upgrade iOS SDK
