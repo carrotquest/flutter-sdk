@@ -1,3 +1,9 @@
+## 1.0.0
+- Breaking Change: Updated the initialization method signature. Passing appID is no longer required.
+- Notification Permissions: Removed built-in notification permission logic to eliminate ambiguity and provide developers with more control.
+- SDK Updates: Upgraded Android and iOS SDKs. These updates include numerous bug fixes and a new implementation for handling personal data consent via pop-ups.
+- Documentation & Examples: Refreshed the example project and polished the documentation for better clarity.
+
 ## 0.0.24
 - Fixed the bug with userAgent for Android
 - Added validation for the correctness of the apiKey for Android

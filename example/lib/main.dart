@@ -6,6 +6,7 @@ import 'package:carrotquest_sdk/user_property/ecommerce_user_property.dart';
 import 'package:carrotquest_sdk/user_property/user_property.dart';
 import 'package:carrotquest_sdk_example/get_hash_use_case.dart';
 import 'package:carrotquest_sdk_example/firebase_options.dart';
+import 'package:carrotquest_sdk_example/notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,9 +35,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final _carrot = Carrot();
 
-  /// Для работы с Carrot quest для Flutter вам понадобится App ID, API Key и User Auth Key (либо ранее сгенерированный хэш для авторизации).
+  /// Для работы с Carrot quest для Flutter вам понадобится API Key и User Auth Key (либо ранее сгенерированный хэш для авторизации).
   /// Вы можете найти эти данные на вкладке Настройки > Разработчикам
-  final String _appId = "";
   final String _apiKey = "";
   final String _userAuthKey = "";
 
@@ -55,6 +55,10 @@ class _MyAppState extends State<MyApp> {
       debugPrint("$error");
       return false;
     }).then((value) async {
+      if (await NotificationService.checkPermissions()) {
+        _initFcm();
+      }
+
       Carrot.getUnreadConversationsCountStream().listen((count) {
         unreadConversationsCount = count;
         setState(() {});
@@ -63,29 +67,33 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<bool> _initCarrotSdk() {
-    return Carrot.setup(_appId, _apiKey, appGroup: _appGroup)
-        .then((initResult) async {
-      await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform);
-      await FirebaseMessaging.instance.setAutoInitEnabled(true);
+    return Carrot.setup(_apiKey, appGroup: _appGroup);
+  }
 
-      FirebaseMessaging.onBackgroundMessage(
-          _firebaseMessagingBackgroundHandler);
+  void _initFcm() async {
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-      String? token = await FirebaseMessaging.instance.getToken();
+    String? token = await FirebaseMessaging.instance.getToken();
 
-      if (token != null) {
-        await Carrot.sendFcmToken(token);
+    if (token != null && token.isNotEmpty) {
+      await Carrot.sendFcmToken(token);
 
-        FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-          bool isCarrotPush = Carrot.isCarrotQuestPush(message.data);
-          if (isCarrotPush) {
-            Carrot.sendFirebasePushNotification(message.data);
-          }
-        });
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+        bool isCarrotPush = Carrot.isCarrotQuestPush(message.data);
+        if (isCarrotPush) {
+          Carrot.sendFirebasePushNotification(message.data);
+        }
+      });
+    }
+  }
+
+  void _requestNotificationsPermission() {
+    NotificationService.requestNotificationPermission(context).then((res) {
+      if (res) {
+        _initFcm();
       }
-
-      return initResult;
     });
   }
 
@@ -503,6 +511,15 @@ class _MyAppState extends State<MyApp> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    TextButton(
+                      onPressed: () {
+                        _requestNotificationsPermission();
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text("Enable notifications"),
+                      ),
+                    ),
                     TextButton(
                       onPressed: () {
                         Carrot.trackEvent("Tap button",

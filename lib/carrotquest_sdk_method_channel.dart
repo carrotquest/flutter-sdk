@@ -25,9 +25,9 @@ class MethodChannelCarrotquestSdk extends CarrotquestSdkPlatform {
   }
 
   @override
-  Future<bool> setup(String appId, String apiKey, String? appGroup) async {
+  Future<bool> setup(String apiKey, String? appGroup) async {
     String? initResultStr = await methodChannel.invokeMethod<String>(
-        'setup', {'api_key': apiKey, 'app_id': appId, 'app_group': appGroup});
+        'setup', {'api_key': apiKey, 'app_group': appGroup});
     return initResultStr != null && initResultStr.toLowerCase() == 'true';
   }
 

@@ -52,13 +52,14 @@ public class CarrotquestSdkPlugin: NSObject, FlutterPlugin {
     let appGroup = args["app_group"] as? String
     Carrot.shared.setup(
         withApiKey: apiKey,
-        withTheme: .fromMobile,
         withAppGroup: appGroup,
         successHandler: {
             Carrot.shared.getUnreadConversationsCount { [weak self] count in
                 guard let self = self else { return }
                 self.channel?.invokeMethod("unreadConversationsCount", arguments: count)
             }
+            Carrot.shared.setTheme(.fromMobile)
+
             result("true")
         },
         errorHandler: { e in

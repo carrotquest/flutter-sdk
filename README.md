@@ -57,10 +57,10 @@ android {
 Для работы с Carrot quest для Flutter вам понадобится API Key и User Auth Key. Вы можете найти эти ключи на вкладке Настройки > Разработчикам:  
 ![Api keys](https://github.com/carrotquest/android-sdk/blob/carrotquest/img/carrot_api_keys.png?raw=true)
 
-Для инициализации Carrot quest вам нужно выполнить следующий код в методе `onCreate()` вашего приложения:
+Для инициализации Carrot quest вам нужно выполнить следующий код, например, сразу после запуска приложения:
 
 ```dart  
-Carrot.setup(apiKey, appId);  
+Carrot.setup(apiKey, appGroup: _appGroup);  
 ```
 
 На Android у Вас может возникнуть ошибка при попытке инициализации SDK(например когда Flutter приложение перезапустилось после долгого нахождения в фоне в то время как Android часть нет). Для избежания таких случаев, убедитесь что проверили статус инициализации SDK:
@@ -171,41 +171,57 @@ Carrot.trackScreen(screenName);
       Более подробно о процессе установки FCM в свой Flutter-проект можно узнать в официальной  [документации](https://firebase.google.com/docs/flutter/setup?platform=android) 
 
 2. В файле `main.dart` перед объявления метода `main()` добавить (или модифицировать, если вы уже используете FCM у себя в проекте) хэндлер для пушей, которые будет приходить в фоне, внутри которого нужно прокинуть пуши в Carrot SDK, чтобы они корректно отобразились на устройстве:
-      ```dart
-      @pragma('vm:entry-point')
-      Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    ```dart
+    @pragma('vm:entry-point')
+    Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-      
+        
         bool isCarrotPush = Carrot.isCarrotQuestPush(message.data);
         if (isCarrotPush) {
-          Carrot.sendFirebasePushNotification(message.data);
+            Carrot.sendFirebasePushNotification(message.data);
         }
-      }
-      ```
+    }
+    ```
 
-3. После инициализации Carrot SDK нужно отправить в сервис token от Firebase, используя метод `Carrot.sendFcmToken(token)`, задать для Firebase ранее написанный хэндлер для уведомлений, которые будут приходить при закрытом приложении, и написать листенер для уведомлений, которые будут приходить в открытое приложение. Например, так:
-      ```dart
-      Future<void> _initCarrotSdk() {
-        return Carrot.setup(_appId, _apiKey).then((value) async {
-      	await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-      	await FirebaseMessaging.instance.setAutoInitEnabled(true);
-      
-      	FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-      	String? token = await FirebaseMessaging.instance.getToken();
-      
-      	if (token != null) {
-      	  await Carrot.sendFcmToken(token);
-      
-            FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-              bool isCarrotPush = Carrot.isCarrotQuestPush(message.data);
-              if (isCarrotPush) {
-                Carrot.sendFirebasePushNotification(message.data);
-              }
+3. После инициализации Carrot SDK нужно отправить в сервис token от Firebase, используя метод `Carrot.sendFcmToken(token)`. Но перед тем как отправлять токен, убедитесь, что пользователь дал свое разрешение на показ уведомлений. Без этого разрешения токен не запишется в базу на сервере. 
+Также нужно задать для Firebase ранее написанный хэндлер для уведомлений, которые будут приходить при закрытом приложении, и написать листенер для уведомлений, которые будут приходить в открытое приложение. Например, так:
+    ```dart
+    Future<void> _initCarrotSdk() {
+        return Carrot.setup(_appId, _apiKey).then((isInit) async {
+            if (!isInit) {
+                return;
+            }
+
+            if (await NotificationService.checkPermissions()) {
+                _initFcm();
+            }
+
+            Carrot.getUnreadConversationsCountStream().listen((count) {
+                unreadConversationsCount = count;
+                setState(() {});
             });
-      	}
         });
-      }
-      ```
+    }
+
+    void _initFcm() async {
+        await Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform);
+        FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+        String? token = await FirebaseMessaging.instance.getToken();
+
+        if (token != null && token.isNotEmpty) {
+            await Carrot.sendFcmToken(token);
+
+            FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+                bool isCarrotPush = Carrot.isCarrotQuestPush(message.data);
+                if (isCarrotPush) {
+                Carrot.sendFirebasePushNotification(message.data);
+                }
+            });
+        }
+    }
+    ```
 4. Чтобы получать уведомления на устройства Apple, нужно открыть iOS часть своего проекта и написать код запроса на разрешения показа уведмолений. Для этого откройте AppDelegate и в функцию application допишите следущий код:
       ```swift
       override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
