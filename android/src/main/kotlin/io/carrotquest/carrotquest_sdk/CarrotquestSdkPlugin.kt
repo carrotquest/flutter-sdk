@@ -300,10 +300,6 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     }
 
     private fun sendToken(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
-        if (!checkPluginInitiated(result)) {
-            return
-        }
-
         val token = call.argument<String?>("token")
         Carrot.sendFcmToken(token)
 

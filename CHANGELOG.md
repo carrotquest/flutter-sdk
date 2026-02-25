@@ -1,3 +1,6 @@
+## 1.0.1
+- Slightly modified the `Carrot.sendFcmToken(token)` method to eliminate potential issues when passing the token (Android only).
+
 ## 1.0.0
 - Breaking Change: Updated the initialization method signature. Passing appID is no longer required.
 - Notification Permissions: Removed built-in notification permission logic to eliminate ambiguity and provide developers with more control.
