@@ -1,3 +1,8 @@
+## 1.0.2
+- Improved the mechanics for recording statistics of trigger messages, ensuring more accurate and reliable activity tracking.
+- [iOS] Fixed a bug where the input field could stop displaying in situations where it should be visible.
+- Fixed other minor bugs to enhance the package's stability and performance.
+
 ## 1.0.1
 - Slightly modified the `Carrot.sendFcmToken(token)` method to eliminate potential issues when passing the token (Android only).
 
