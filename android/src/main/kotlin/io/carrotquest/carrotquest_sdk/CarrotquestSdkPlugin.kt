@@ -1,5 +1,5 @@
 package io.carrotquest.carrotquest_sdk
-
+import java.util.concurrent.atomic.AtomicBoolean
 import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -148,61 +148,85 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onDetachedFromActivityForConfigChanges() {
     }
 
-    //=====
     private fun setup(
         @NonNull call: MethodCall,
         @NonNull result: MethodChannel.Result,
     ) {
+        val replied = AtomicBoolean(false)
+
         apiKey = call.argument<String?>("api_key")
         if (apiKey == null) {
-            result.error("An error has occurred, the apiKey or appId is null.", null, null)
+            if (replied.compareAndSet(false, true)) {
+                result.error("API_KEY_NULL", "apiKey is null", null)
+            }
             return
         }
 
         val con = activity ?: context
         if (con != null) {
             try {
-                Carrot.setup(con, apiKey!!, object : Carrot.Callback<Boolean> { 
+                Carrot.setup(con, apiKey!!, object : Carrot.Callback<Boolean> {
+
                     override fun onResponse(r: Boolean?) {
                         val res = r ?: false
+
                         if (res) {
                             try {
-                                val iconId = con.resources.getIdentifier("ic_cqsdk_notification", "drawable", con.packageName);
+                                val iconId = con.resources.getIdentifier(
+                                    "ic_cqsdk_notification",
+                                    "drawable",
+                                    con.packageName
+                                )
+
                                 if (iconId == 0) {
                                     Carrot.setNotificationIcon(R.drawable.ic_cqsdk_def_notification)
                                 } else {
                                     Carrot.setNotificationIcon(iconId)
                                 }
 
-                                Carrot.setUnreadConversationsCallback(object : Callback<List<String>>{
+                                Carrot.setUnreadConversationsCallback(object : Callback<List<String>> {
                                     override fun onResponse(unreadConversationsIds: List<String>?) {
-                                        channel.invokeMethod("unreadConversationsCount", unreadConversationsIds?.size ?: 0)
+                                        channel.invokeMethod(
+                                            "unreadConversationsCount",
+                                            unreadConversationsIds?.size ?: 0
+                                        )
                                     }
 
-                                    override fun onFailure(t: Throwable?) {
-                                    
-                                    }
+                                    override fun onFailure(t: Throwable?) {}
                                 })
-                            } catch (e: java.lang.Exception) {
+
+                            } catch (e: Exception) {
                                 println("$e")
                             }
-                            result.success("true")
+
+                            if (replied.compareAndSet(false, true)) {
+                                result.success("true")
+                            }
+
                         } else {
-                            result.success("false")
+                            if (replied.compareAndSet(false, true)) {
+                                result.success("false")
+                            }
                         }
                     }
 
                     override fun onFailure(t: Throwable?) {
-                         result.success("false")
+                        if (replied.compareAndSet(false, true)) {
+                            result.success("false")
+                        }
                     }
                 })
-                
-                
-            } catch(e: java.lang.Exception) {
+
+            } catch (e: Exception) {
+                if (replied.compareAndSet(false, true)) {
+                    result.success("false")
+                }
+            }
+
+        } else {
+            if (replied.compareAndSet(false, true)) {
                 result.success("false")
             }
-        } else {
-            result.success("false")
         }
     }
 
