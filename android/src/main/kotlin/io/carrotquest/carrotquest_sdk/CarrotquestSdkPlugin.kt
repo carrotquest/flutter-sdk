@@ -155,7 +155,7 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     ) {
         apiKey = call.argument<String?>("api_key")
         if (apiKey == null) {
-            result.error("An error has occurred, the apiKey or appId is null.", null, null)
+            result.error("An error has occurred, the apiKey is null.", null, null)
             return
         }
 
