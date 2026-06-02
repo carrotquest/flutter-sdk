@@ -1,4 +1,18 @@
 .dart_tool/
 .idea/
-.vscode/
 example/android/build/
+
+# .vscode игнорируется целиком, кроме общей конфигурации запуска
+.vscode/*
+!.vscode/launch.json
+
+# Локальные секреты Carrot quest (не коммитить — см. example/config/secrets.example.json и README)
+example/config/secrets.json
+
+# Firebase-конфиги демо-проекта: в репозитории хранятся только *.example-шаблоны,
+# рабочие файлы генерируются локально (flutterfire configure) или через example/setup.sh
+example/lib/firebase_options.dart
+example/android/app/google-services.json
+example/ios/Runner/GoogleService-Info.plist
+example/ios/GoogleService-Info.plist
+example/ios/firebase_app_id_file.json

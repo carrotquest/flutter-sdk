@@ -9,6 +9,7 @@ SDK CarrotQuest для Flutter позволяет разработчикам и�
 - [Чат с оператором](#chat)
 - [Уведомления](#notifications)
 - [Дополнительная информация об iOS](#additional_ios)
+- [Локальная разработка и запуск example](#local_dev)
 
 <a name="install"></a>
 ## Установка
@@ -326,3 +327,45 @@ Carrot.trackScreen(screenName);
 ## Дополнительная информация об iOS
 
 Чтобы светлая тема правильно выглядела, вам нужно разрешить контроллерам управлять цветом статус-бара. Для этого откройте нативную iOS часть своего проекта и в файле info.plist в строчке под названием UIViewControllerBasedStatusBarAppearance поменяте false на true. Если вы открываете через Xcode, тогда эта строка называется "View controller-based status Bar appearance" и имеет значение NO. Вам необходимо поставить значение на YES. 
+
+<a name="local_dev"></a>
+## Локальная разработка и запуск example
+
+Демо-приложение в `example/` не хранит конфиденциальные данные в коде. Ключи Carrot quest и конфиги Firebase подставляются локально и не попадают в репозиторий (они в `.gitignore`). В git хранятся только шаблоны `*.example`.
+
+**Разовая подготовка окружения:**
+
+```bash
+cd example
+./setup.sh
+```
+
+Скрипт создаёт из шаблонов рабочие файлы (которые игнорируются git):
+- `config/secrets.json` — ключи Carrot quest;
+- `lib/firebase_options.dart`, `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, `ios/GoogleService-Info.plist`, `ios/firebase_app_id_file.json` — конфиг Firebase.
+
+**Дальше:**
+
+1. Впишите свои значения в `example/config/secrets.json`:
+
+   ```json
+   {
+     "CARROT_API_KEY": "<ваш API Key>",
+     "CARROT_USER_AUTH_KEY": "<ваш User Auth Key>",
+     "CARROT_APP_GROUP": "group.cq.flutterSdkExample"
+   }
+   ```
+
+   API Key и User Auth Key находятся на вкладке **Настройки → Разработчикам** в Carrot quest.
+
+2. Подставьте реальный Firebase-конфиг демо-проекта — проще всего командой `flutterfire configure` (перезапишет файлы выше), либо отредактируйте созданные файлы вручную.
+
+3. Запустите приложение, передав файл с ключами:
+
+   ```bash
+   flutter run --dart-define-from-file=config/secrets.json
+   ```
+
+   В VS Code для этого уже настроены конфигурации запуска `example` / `example (profile mode)` / `example (release mode)` (см. `.vscode/launch.json`).
+
+> Значения читаются в коде через `String.fromEnvironment(...)` (см. `example/lib/main.dart`), поэтому без `--dart-define-from-file` поля останутся пустыми и SDK не инициализируется.

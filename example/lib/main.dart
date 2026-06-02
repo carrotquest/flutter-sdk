@@ -36,14 +36,19 @@ class _MyAppState extends State<MyApp> {
   final _carrot = Carrot();
 
   /// Для работы с Carrot quest для Flutter вам понадобится API Key и User Auth Key (либо ранее сгенерированный хэш для авторизации).
-  /// Вы можете найти эти данные на вкладке Настройки > Разработчикам
-  final String _apiKey = "";
-  final String _userAuthKey = "";
+  /// Вы можете найти эти данные на вкладке Настройки > Разработчикам.
+  ///
+  /// Значения НЕ хранятся в коде: они подставляются при запуске через
+  ///   flutter run --dart-define-from-file=config/secrets.json
+  /// Шаблон — config/secrets.example.json, подробности — в README («Локальная разработка»).
+  final String _apiKey = const String.fromEnvironment('CARROT_API_KEY');
+  final String _userAuthKey = const String.fromEnvironment('CARROT_USER_AUTH_KEY');
 
   /// AppGroup - общее хранилище данных для разных приложений одного разработчика.
   /// Он позволяет обменитьвася данными между приложением и Notification Service Extension.
   /// Создать его можно в https://developer.apple.com/account/resources/identifiers/list/applicationGroup
-  final String _appGroup = "group.cq.flutterSdkExample";
+  final String _appGroup = const String.fromEnvironment('CARROT_APP_GROUP',
+      defaultValue: 'group.cq.flutterSdkExample');
 
   int unreadConversationsCount = 0;
 
