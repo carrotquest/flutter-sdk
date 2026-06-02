@@ -42,7 +42,8 @@ class _MyAppState extends State<MyApp> {
   ///   flutter run --dart-define-from-file=config/secrets.json
   /// Шаблон — config/secrets.example.json, подробности — в README («Локальная разработка»).
   final String _apiKey = const String.fromEnvironment('CARROT_API_KEY');
-  final String _userAuthKey = const String.fromEnvironment('CARROT_USER_AUTH_KEY');
+  final String _userAuthKey =
+      const String.fromEnvironment('CARROT_USER_AUTH_KEY');
 
   /// AppGroup - общее хранилище данных для разных приложений одного разработчика.
   /// Он позволяет обменитьвася данными между приложением и Notification Service Extension.
