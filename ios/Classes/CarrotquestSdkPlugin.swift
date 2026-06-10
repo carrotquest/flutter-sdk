@@ -41,6 +41,8 @@ public class CarrotquestSdkPlugin: NSObject, FlutterPlugin {
           self._pushCampaignsUnsubscribe()
     case "trackScreen":
           self._trackScreen(with: call, and: result)
+      case "trackUtm":
+          self._trackUtm(with: call, and: result)
       default:
           result(FlutterMethodNotImplemented)
       }
@@ -159,6 +161,18 @@ private func _auth(with call: FlutterMethodCall, and result: @escaping FlutterRe
         guard let screen = args["screen"] as? String else { return }
         
         Carrot.shared.trackScreen(screen)
+        result(nil)
+    }
+
+    private func _trackUtm(with call: FlutterMethodCall, and result: @escaping FlutterResult) {
+        guard let args = call.arguments as? NSDictionary else { return }
+        guard let urlString = args["url"] as? String else { return }
+        guard let url = URL(string: urlString) else {
+            result(FlutterError(code: "trackUtm", message: "Invalid URL", details: urlString))
+            return
+        }
+
+        Carrot.shared.trackUtm(url)
         result(nil)
     }
 }

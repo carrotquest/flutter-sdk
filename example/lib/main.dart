@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_links/app_links.dart';
 import 'package:carrotquest_sdk/carrotquest_sdk.dart';
 import 'package:carrotquest_sdk/user_property/carrot_user_property.dart';
 import 'package:carrotquest_sdk/user_property/ecommerce_user_property.dart';
@@ -40,7 +41,7 @@ class _MyAppState extends State<MyApp> {
   ///
   /// Значения НЕ хранятся в коде: они подставляются при запуске через
   ///   flutter run --dart-define-from-file=config/secrets.json
-  /// Шаблон — config/secrets.example.json, подробности — в README («Локальная разработка»).
+  /// Шаблон — config/secrets.example.json, подробности — в example/README.md.
   final String _apiKey = const String.fromEnvironment('CARROT_API_KEY');
   final String _userAuthKey =
       const String.fromEnvironment('CARROT_USER_AUTH_KEY');
@@ -53,9 +54,14 @@ class _MyAppState extends State<MyApp> {
 
   int unreadConversationsCount = 0;
 
+  final _appLinks = AppLinks();
+  StreamSubscription<Uri>? _linkSubscription;
+
   @override
   void initState() {
     super.initState();
+
+    _initDeeplinks();
 
     _initCarrotSdk().onError((error, stackTrace) {
       debugPrint("$error");
@@ -69,6 +75,44 @@ class _MyAppState extends State<MyApp> {
         unreadConversationsCount = count;
         setState(() {});
       });
+    });
+  }
+
+  @override
+  void dispose() {
+    _linkSubscription?.cancel();
+    super.dispose();
+  }
+
+  /// Отслеживание UTM-меток из ссылок.
+  ///
+  /// Метод [Carrot.trackUtm] предназначен прежде всего для случая, когда
+  /// приложение открывается по диплинку (URL Scheme / Universal Link / App Link).
+  /// Передайте в него ссылку, по которой было открыто приложение, — SDK сам
+  /// извлечёт из неё UTM-параметры (`utm_source`, `utm_medium`, `utm_campaign`,
+  /// `utm_term`, `utm_content`) и сохранит их для текущего пользователя.
+  ///
+  /// Здесь для получения диплинков используется пакет `app_links`. Метод можно
+  /// безопасно вызывать ещё до завершения [Carrot.setup] — SDK обработает метки,
+  /// как только будет инициализирован. Чтобы пример действительно открывался по
+  /// ссылке, в нативных проектах настроена кастомная URL-схема `carrotexample`
+  /// (см. android/app/src/main/AndroidManifest.xml и ios/Runner/Info.plist).
+  ///
+  /// Проверить можно так:
+  ///   Android: adb shell am start -a android.intent.action.VIEW \
+  ///     -d "carrotexample://open?utm_source=google&utm_medium=cpc&utm_campaign=spring_sale"
+  ///   iOS:     xcrun simctl openurl booted \
+  ///     "carrotexample://open?utm_source=google&utm_medium=cpc&utm_campaign=spring_sale"
+  Future<void> _initDeeplinks() async {
+    // Ссылка, по которой приложение было запущено (холодный старт).
+    final initialUri = await _appLinks.getInitialLink();
+    if (initialUri != null) {
+      Carrot.trackUtm(initialUri.toString());
+    }
+
+    // Ссылки, приходящие, пока приложение уже запущено.
+    _linkSubscription = _appLinks.uriLinkStream.listen((uri) {
+      Carrot.trackUtm(uri.toString());
     });
   }
 

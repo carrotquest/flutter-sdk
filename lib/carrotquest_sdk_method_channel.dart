@@ -139,4 +139,10 @@ class MethodChannelCarrotquestSdk extends CarrotquestSdkPlatform {
     return methodChannel.invokeMethod<String>(
         'trackScreen', {'screen': screen}).then((value) => value);
   }
+
+  @override
+  Future<void> trackUtm(String url) {
+    return methodChannel.invokeMethod<String>(
+        'trackUtm', {'url': url}).then((value) => value);
+  }
 }

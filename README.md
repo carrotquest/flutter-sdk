@@ -9,7 +9,7 @@ SDK CarrotQuest для Flutter позволяет разработчикам и�
 - [Чат с оператором](#chat)
 - [Уведомления](#notifications)
 - [Дополнительная информация об iOS](#additional_ios)
-- [Локальная разработка и запуск example](#local_dev)
+- [Demo-приложение (example)](#example)
 
 <a name="install"></a>
 ## Установка
@@ -122,6 +122,29 @@ Carrot.logOut();
 ```dart  
 Carrot.trackScreen(screenName);
 ```
+Для отслеживания UTM-меток из ссылок используйте метод `trackUtm()`. Он предназначен прежде всего для случая, когда приложение открывается по диплинку (URL Scheme / Universal Link / App Link). Передайте в метод ссылку, по которой было открыто приложение, — SDK извлечёт из неё UTM-параметры (`utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`) и сохранит их для текущего пользователя.
+```dart  
+Carrot.trackUtm(url);
+```
+Метод можно безопасно вызывать ещё до завершения `Carrot.setup()` — SDK обработает метки, как только будет инициализирован.
+
+Получать диплинки во Flutter удобно, например, через пакет [app_links](https://pub.dev/packages/app_links):
+```dart  
+final appLinks = AppLinks();
+
+// Ссылка, по которой приложение было запущено (холодный старт)
+final initialUri = await appLinks.getInitialLink();
+if (initialUri != null) {
+  Carrot.trackUtm(initialUri.toString());
+}
+
+// Ссылки, приходящие, пока приложение уже запущено
+appLinks.uriLinkStream.listen((uri) {
+  Carrot.trackUtm(uri.toString());
+});
+```
+Готовый пример смотрите в `example/lib/main.dart` (там же — настройка URL-схемы в `AndroidManifest.xml` и `Info.plist`).
+
 Вы можете получить количество диалогов, содержащих непрочитанные сообщения
 ```dart  
  Carrot.getUnreadConversationsCount();  
@@ -328,44 +351,9 @@ Carrot.trackScreen(screenName);
 
 Чтобы светлая тема правильно выглядела, вам нужно разрешить контроллерам управлять цветом статус-бара. Для этого откройте нативную iOS часть своего проекта и в файле info.plist в строчке под названием UIViewControllerBasedStatusBarAppearance поменяте false на true. Если вы открываете через Xcode, тогда эта строка называется "View controller-based status Bar appearance" и имеет значение NO. Вам необходимо поставить значение на YES. 
 
-<a name="local_dev"></a>
-## Локальная разработка и запуск example
+<a name="example"></a>
+## Demo-приложение (example)
 
-Демо-приложение в `example/` не хранит конфиденциальные данные в коде. Ключи Carrot quest и конфиги Firebase подставляются локально и не попадают в репозиторий (они в `.gitignore`). В git хранятся только шаблоны `*.example`.
+В каталоге [`example/`](example/) лежит готовое приложение, которое показывает все возможности SDK на практике: инициализацию, авторизацию, свойства и события, чат, push-уведомления и трекинг UTM-меток. Чтобы понять, как пользоваться SDK, чаще всего достаточно просто посмотреть код — главный файл [`example/lib/main.dart`](example/lib/main.dart).
 
-**Разовая подготовка окружения:**
-
-```bash
-cd example
-./setup.sh
-```
-
-Скрипт создаёт из шаблонов рабочие файлы (которые игнорируются git):
-- `config/secrets.json` — ключи Carrot quest;
-- `lib/firebase_options.dart`, `android/app/google-services.json`, `ios/Runner/GoogleService-Info.plist`, `ios/GoogleService-Info.plist`, `ios/firebase_app_id_file.json` — конфиг Firebase.
-
-**Дальше:**
-
-1. Впишите свои значения в `example/config/secrets.json`:
-
-   ```json
-   {
-     "CARROT_API_KEY": "<ваш API Key>",
-     "CARROT_USER_AUTH_KEY": "<ваш User Auth Key>",
-     "CARROT_APP_GROUP": "group.cq.flutterSdkExample"
-   }
-   ```
-
-   API Key и User Auth Key находятся на вкладке **Настройки → Разработчикам** в Carrot quest.
-
-2. Подставьте реальный Firebase-конфиг демо-проекта — проще всего командой `flutterfire configure` (перезапишет файлы выше), либо отредактируйте созданные файлы вручную.
-
-3. Запустите приложение, передав файл с ключами:
-
-   ```bash
-   flutter run --dart-define-from-file=config/secrets.json
-   ```
-
-   В VS Code для этого уже настроены конфигурации запуска `example` / `example (profile mode)` / `example (release mode)` (см. `.vscode/launch.json`).
-
-> Значения читаются в коде через `String.fromEnvironment(...)` (см. `example/lib/main.dart`), поэтому без `--dart-define-from-file` поля останутся пустыми и SDK не инициализируется.
+Как запустить приложение и проверить трекинг UTM-меток — описано в [`example/README.md`](example/README.md).

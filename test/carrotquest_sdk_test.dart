@@ -79,6 +79,11 @@ class MockCarrotquestSdkPlatform
   Future<void> trackScreen(String screen) {
     return Future.value();
   }
+
+  @override
+  Future<void> trackUtm(String url) {
+    return Future.value();
+  }
 }
 
 void main() {

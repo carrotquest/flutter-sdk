@@ -1,5 +1,8 @@
 .dart_tool/
 .idea/
+
+# Build output (генерируется flutter build/test/analyze — не коммитить)
+build/
 example/android/build/
 
 # .vscode игнорируется целиком, кроме общей конфигурации запуска

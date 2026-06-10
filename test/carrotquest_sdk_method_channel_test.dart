@@ -24,4 +24,22 @@ void main() {
   test('getPlatformVersion', () async {
     expect(await platform.getPlatformVersion(), '42');
   });
+
+  test('trackUtm', () async {
+    MethodCall? captured;
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      channel,
+      (MethodCall methodCall) async {
+        captured = methodCall;
+        return null;
+      },
+    );
+
+    const url = 'https://example.com/?utm_source=google&utm_medium=cpc';
+    await platform.trackUtm(url);
+
+    expect(captured?.method, 'trackUtm');
+    expect(captured?.arguments, {'url': url});
+  });
 }

@@ -1,3 +1,7 @@
+## 1.2.0
+- Added the `Carrot.trackUtm(url)` method for tracking UTM tags (`utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`) from a URL. It is intended primarily for the case when the app is opened via a deeplink (URL Scheme / Universal Link / App Link): pass the opening URL and the SDK extracts and saves the UTM tags for the current user. Can be called even before `Carrot.setup()` completes. Supported on both Android and iOS.
+- Example app: demonstrates UTM tracking via deeplinks using the `app_links` package, including the `carrotexample` URL scheme setup for Android and iOS.
+
 ## 1.1.0
 Android                                                              
 Major refactoring                                                                  
