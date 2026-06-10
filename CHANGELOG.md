@@ -1,3 +1,6 @@
+## 1.1.1
+- Updated API endpoint. No other changes — behavior, public API and dependencies are unchanged. No migration needed; just bump the SDK version.
+
 ## 1.1.0
 Android                                                              
 Major refactoring                                                                  
