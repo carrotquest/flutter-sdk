@@ -31,10 +31,16 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
+  target 'RunnerUITests' do
+    inherit! :complete
+  end
+
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
   target 'RunnerTests' do
     inherit! :search_paths
   end
+
   target 'NotificationExtension' do
     inherit! :search_paths
   end
@@ -48,6 +54,19 @@ post_install do |installer|
       xcconfig = File.read(xcconfig_path)
       xcconfig_mod = xcconfig.gsub(/DT_TOOLCHAIN_DIR/, "TOOLCHAIN_DIR")
       File.open(xcconfig_path, "w") { |file| file << xcconfig_mod }
+      config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+    end
+  end
+
+  # Patch firebase_messaging header to use FirebaseMessaging import instead of Firebase umbrella
+  fcm_plugin_path = File.join(installer.sandbox.pod_dir('firebase_messaging'), 'Classes', 'FLTFirebaseMessagingPlugin.h')
+  if File.exist?(fcm_plugin_path)
+    content = File.read(fcm_plugin_path)
+    new_content = content.gsub('#import <Firebase/Firebase.h>', '#import <FirebaseMessaging/FirebaseMessaging.h>')
+    new_content = new_content.gsub('@import Firebase;', '#import <FirebaseMessaging/FirebaseMessaging.h>')
+    if new_content != content
+      File.open(fcm_plugin_path, 'w') { |file| file << new_content }
+      Pod::UI.puts "Patched FLTFirebaseMessagingPlugin.h to use FirebaseMessaging header"
     end
   end
 end

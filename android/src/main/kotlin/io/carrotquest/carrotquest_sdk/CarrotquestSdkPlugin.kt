@@ -37,7 +37,7 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
         if (call.method == "setup") {
             if (Carrot.isInit()) {
-                result.error("Plugin is already initialized.", null, null)
+                result.success("true")
                 return
             }
 

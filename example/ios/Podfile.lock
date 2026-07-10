@@ -3,6 +3,7 @@ PODS:
     - CarrotquestSDK (= 3.1.6)
     - Flutter
   - CarrotquestSDK (3.1.6)
+  - CocoaAsyncSocket (7.6.5)
   - Firebase/CoreOnly (10.25.0):
     - FirebaseCore (= 10.25.0)
   - Firebase/Messaging (10.25.0):
@@ -65,13 +66,15 @@ PODS:
   - GoogleUtilities/UserDefaults (7.13.3):
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
-  - integration_test (0.0.1):
-    - Flutter
   - nanopb (2.30910.0):
     - nanopb/decode (= 2.30910.0)
     - nanopb/encode (= 2.30910.0)
   - nanopb/decode (2.30910.0)
   - nanopb/encode (2.30910.0)
+  - patrol (0.0.1):
+    - CocoaAsyncSocket (~> 7.6)
+    - Flutter
+    - FlutterMacOS
   - PromisesObjC (2.4.1)
 
 DEPENDENCIES:
@@ -79,11 +82,12 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
-  - integration_test (from `.symlinks/plugins/integration_test/ios`)
+  - patrol (from `.symlinks/plugins/patrol/darwin`)
 
 SPEC REPOS:
   trunk:
     - CarrotquestSDK
+    - CocoaAsyncSocket
     - Firebase
     - FirebaseCore
     - FirebaseCoreInternal
@@ -103,12 +107,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
-  integration_test:
-    :path: ".symlinks/plugins/integration_test/ios"
+  patrol:
+    :path: ".symlinks/plugins/patrol/darwin"
 
 SPEC CHECKSUMS:
   carrotquest_sdk: e8822ddd50d8bd2a92bbe54a2ca717e3a9c3678a
   CarrotquestSDK: 2867af681306088ee513863fdb67ceaaf440e3e5
+  CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   Firebase: 0312a2352584f782ea56f66d91606891d4607f06
   firebase_core: 3b49a055ff54114cae400581c13671fe53936c36
   firebase_messaging: 394589dcda43e42ec9807558a409a975e285c45b
@@ -119,10 +124,10 @@ SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
-  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
+  patrol: cea8074f183a2a4232d0ebd10569ae05149ada42
   PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
 
-PODFILE CHECKSUM: 0535b60dc4c5ffa9153acd8c3959f05ee5474256
+PODFILE CHECKSUM: 970641b55928f3074d0685c1a1d68b46a9258f97
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.17.0

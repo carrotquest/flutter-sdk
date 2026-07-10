@@ -56,7 +56,6 @@ class DefaultFirebaseOptions {
     projectId: '-',
     storageBucket: '-',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: '-',
     appId: '-',

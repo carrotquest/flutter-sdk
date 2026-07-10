@@ -32,6 +32,10 @@ dependencies:
   # Firebase
   firebase_core: ^2.15.0
   firebase_messaging: ^14.6.5
+  mockito: ^5.7.0
+  plugin_platform_interface: ^2.1.8
+  firebase_core_platform_interface: ^5.4.2
+  firebase_messaging_platform_interface: ^4.5.37
 
 dev_dependencies:
   integration_test:
@@ -45,6 +49,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  patrol: ^4.6.1
+  permission_handler: ^11.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -87,3 +93,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+patrol:
+  app_name: carrotquest_sdk_example
+  android:
+    package_name: io.carrotquest.carrotquest_sdk_example
+  ios:
+    bundle_id: com.carrotquest.sdkExample
+  test_directory: patrol_test

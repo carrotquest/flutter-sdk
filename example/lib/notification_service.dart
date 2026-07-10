@@ -1,35 +1,32 @@
 import 'package:flutter/material.dart';
-//import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class NotificationService {
-  static Future<bool> requestNotificationPermission(
-      BuildContext context) async {
-    // PermissionStatus status = await Permission.notification.status;
+  static Future<bool> requestNotificationPermission() async {
+    try {
+      PermissionStatus status = await Permission.notification.status;
 
-    // if (status.isGranted) {
-    //   return Future.value(true);
-    // }
+      if (status.isGranted) {
+        return true;
+      }
 
-    // if (status.isDenied) {
-    //   status = await Permission.notification.request();
+      if (status.isDenied) {
+        status = await Permission.notification.request();
+        return status.isGranted;
+      }
 
-    //   if (status.isGranted) {
-    //     return Future.value(true);
-    //   } else {
-    //     debugPrint(":(");
-    //     return Future.value(false);
-    //   }
-    // }
-    //return Future.value(false);
-
-    return Future.value(true);
+      return false;
+    } catch (_) {
+      return false;
+    }
   }
 
   static Future<bool> checkPermissions() async {
-    // PermissionStatus status = await Permission.notification.status;
-
-    // return status.isGranted;
-
-    return true;
+    try {
+      PermissionStatus status = await Permission.notification.status;
+      return status.isGranted;
+    } catch (_) {
+      return false;
+    }
   }
 }

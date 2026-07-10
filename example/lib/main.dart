@@ -6,6 +6,7 @@ import 'package:carrotquest_sdk/user_property/ecommerce_user_property.dart';
 import 'package:carrotquest_sdk/user_property/user_property.dart';
 import 'package:carrotquest_sdk_example/get_hash_use_case.dart';
 import 'package:carrotquest_sdk_example/firebase_options.dart';
+import 'package:carrotquest_sdk_example/keys/keys.dart';
 import 'package:carrotquest_sdk_example/notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -52,9 +53,12 @@ class _MyAppState extends State<MyApp> {
     super.initState();
 
     _initCarrotSdk().onError((error, stackTrace) {
-      debugPrint("$error");
+      debugPrint("Setup error: $error");
       return false;
     }).then((value) async {
+      debugPrint("Setup result: $value");
+      if (!value) return;
+
       if (await NotificationService.checkPermissions()) {
         _initFcm();
       }
@@ -71,28 +75,42 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _initFcm() async {
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
+    try {
+      await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform);
+    } catch (e) {
+      debugPrint('Firebase already initialized: $e');
+    }
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-    String? token = await FirebaseMessaging.instance.getToken();
-
-    if (token != null && token.isNotEmpty) {
-      await Carrot.sendFcmToken(token);
-
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-        bool isCarrotPush = Carrot.isCarrotQuestPush(message.data);
-        if (isCarrotPush) {
-          Carrot.sendFirebasePushNotification(message.data);
-        }
-      });
+    try {
+      String? token = await FirebaseMessaging.instance.getToken();
+      if (token != null && token.isNotEmpty) {
+        await Carrot.sendFcmToken(token);
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+          bool isCarrotPush = Carrot.isCarrotQuestPush(message.data);
+          if (isCarrotPush) {
+            Carrot.sendFirebasePushNotification(message.data);
+          }
+        });
+      }
+    } catch (e) {
+      debugPrint('FCM init failed (expected in simulator): $e');
     }
   }
 
-  void _requestNotificationsPermission() {
-    NotificationService.requestNotificationPermission(context).then((res) {
+  void _requestNotificationsPermission(BuildContext buttonContext) {
+    NotificationService.requestNotificationPermission().then((res) {
+      if (!buttonContext.mounted) return;
       if (res) {
+        ScaffoldMessenger.of(buttonContext).showSnackBar(
+          const SnackBar(content: Text('Notifications enabled')),
+        );
         _initFcm();
+      } else {
+        ScaffoldMessenger.of(buttonContext).showSnackBar(
+          const SnackBar(content: Text('Notifications denied')),
+        );
       }
     });
   }
@@ -500,6 +518,7 @@ class _MyAppState extends State<MyApp> {
               title: const Text('Carrot quest SDK example app'),
             ),
             floatingActionButton: FloatingActionButton.extended(
+              key: K.mainScreenKey.openChatButtonKey,
               onPressed: () {
                 Carrot.openChat();
               },
@@ -512,8 +531,9 @@ class _MyAppState extends State<MyApp> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     TextButton(
+                      key: K.mainScreenKey.enableNotifications,
                       onPressed: () {
-                        _requestNotificationsPermission();
+                        _requestNotificationsPermission(mContext);
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(20),
