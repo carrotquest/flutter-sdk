@@ -9,6 +9,7 @@ SDK CarrotQuest для Flutter позволяет разработчикам и�
 - [Чат с оператором](#chat)
 - [Уведомления](#notifications)
 - [Дополнительная информация об iOS](#additional_ios)
+- [Demo-приложение (example)](#example)
 
 <a name="install"></a>
 ## Установка
@@ -121,6 +122,29 @@ Carrot.logOut();
 ```dart  
 Carrot.trackScreen(screenName);
 ```
+Для отслеживания UTM-меток из ссылок используйте метод `trackUtm()`. Он предназначен прежде всего для случая, когда приложение открывается по диплинку (URL Scheme / Universal Link / App Link). Передайте в метод ссылку, по которой было открыто приложение, — SDK извлечёт из неё UTM-параметры (`utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`) и сохранит их для текущего пользователя.
+```dart  
+Carrot.trackUtm(url);
+```
+Метод можно безопасно вызывать ещё до завершения `Carrot.setup()` — SDK обработает метки, как только будет инициализирован.
+
+Получать диплинки во Flutter удобно, например, через пакет [app_links](https://pub.dev/packages/app_links):
+```dart  
+final appLinks = AppLinks();
+
+// Ссылка, по которой приложение было запущено (холодный старт)
+final initialUri = await appLinks.getInitialLink();
+if (initialUri != null) {
+  Carrot.trackUtm(initialUri.toString());
+}
+
+// Ссылки, приходящие, пока приложение уже запущено
+appLinks.uriLinkStream.listen((uri) {
+  Carrot.trackUtm(uri.toString());
+});
+```
+Готовый пример смотрите в `example/lib/main.dart` (там же — настройка URL-схемы в `AndroidManifest.xml` и `Info.plist`).
+
 Вы можете получить количество диалогов, содержащих непрочитанные сообщения
 ```dart  
  Carrot.getUnreadConversationsCount();  
@@ -326,3 +350,10 @@ Carrot.trackScreen(screenName);
 ## Дополнительная информация об iOS
 
 Чтобы светлая тема правильно выглядела, вам нужно разрешить контроллерам управлять цветом статус-бара. Для этого откройте нативную iOS часть своего проекта и в файле info.plist в строчке под названием UIViewControllerBasedStatusBarAppearance поменяте false на true. Если вы открываете через Xcode, тогда эта строка называется "View controller-based status Bar appearance" и имеет значение NO. Вам необходимо поставить значение на YES. 
+
+<a name="example"></a>
+## Demo-приложение (example)
+
+В каталоге [`example/`](example/) лежит готовое приложение, которое показывает все возможности SDK на практике: инициализацию, авторизацию, свойства и события, чат, push-уведомления и трекинг UTM-меток. Чтобы понять, как пользоваться SDK, чаще всего достаточно просто посмотреть код — главный файл [`example/lib/main.dart`](example/lib/main.dart).
+
+Как запустить приложение и проверить трекинг UTM-меток — описано в [`example/README.md`](example/README.md).

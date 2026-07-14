@@ -85,4 +85,13 @@ class Carrot {
   static Future<void> trackScreen(String screen) {
     return CarrotquestSdkPlatform.instance.trackScreen(screen);
   }
+
+  /// Track UTM tags from a URL
+  ///
+  /// Pass a URL string containing UTM parameters (e.g. `utm_source`,
+  /// `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`). The SDK parses
+  /// the tags from the URL and saves them for the current user.
+  static Future<void> trackUtm(String url) {
+    return CarrotquestSdkPlatform.instance.trackUtm(url);
+  }
 }

@@ -89,4 +89,8 @@ abstract class CarrotquestSdkPlatform extends PlatformInterface {
     throw UnimplementedError(
         'trackScreen(String screen) has not been implemented.');
   }
+
+  Future<void> trackUtm(String url) {
+    throw UnimplementedError('trackUtm(String url) has not been implemented.');
+  }
 }

@@ -110,6 +110,11 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             return;
         }
 
+        if (call.method == "trackUtm") {
+            trackUtm(call, result);
+            return;
+        }
+
         result.notImplemented()
     }
 
@@ -445,6 +450,25 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             }
 
             Carrot.trackScreen(screen)
+        } catch (e: Exception) {
+            result.error(e.localizedMessage, null, null)
+        }
+    }
+
+    // Note: unlike trackEvent/trackScreen, trackUtm is intentionally NOT gated
+    // behind an initialization check. It is designed to be called when the app
+    // is opened via a deeplink, which may happen before Carrot.setup() finishes;
+    // the native SDK handles tracking the UTM tags once it is initialized.
+    private fun trackUtm(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
+        try {
+            val url = call.argument<String?>("url")
+            if (url == null) {
+                result.error("Url is empty", null, null)
+                return
+            }
+
+            Carrot.trackUtm(url)
+            result.success(null)
         } catch (e: Exception) {
             result.error(e.localizedMessage, null, null)
         }
