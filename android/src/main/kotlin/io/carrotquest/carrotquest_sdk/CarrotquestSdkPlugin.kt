@@ -3,12 +3,13 @@ package io.carrotquest.carrotquest_sdk
 import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.annotation.NonNull
-import com.google.firebase.messaging.RemoteMessage
 import io.carrotquest_sdk.android.Carrot
 import io.carrotquest_sdk.android.Carrot.Callback
+import io.carrotquest_sdk.android.models.EventParams
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -26,6 +27,10 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private var appId: String? = null
     private var apiKey: String? = null
+
+    private val mainHandler = Handler(Looper.getMainLooper())
+
+    @Volatile private var isLoggingOut = false
 
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -167,30 +172,11 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         val con = activity ?: context
         if (con != null) {
             try {
-                Carrot.setup(con, apiKey!!, object : Carrot.Callback<Boolean> { 
+                Carrot.setup(con, apiKey!!, object : Carrot.Callback<Boolean> {
                     override fun onResponse(r: Boolean?) {
                         val res = r ?: false
                         if (res) {
-                            try {
-                                val iconId = con.resources.getIdentifier("ic_cqsdk_notification", "drawable", con.packageName);
-                                if (iconId == 0) {
-                                    Carrot.setNotificationIcon(R.drawable.ic_cqsdk_def_notification)
-                                } else {
-                                    Carrot.setNotificationIcon(iconId)
-                                }
-
-                                Carrot.setUnreadConversationsCallback(object : Callback<List<String>>{
-                                    override fun onResponse(unreadConversationsIds: List<String>?) {
-                                        channel.invokeMethod("unreadConversationsCount", unreadConversationsIds?.size ?: 0)
-                                    }
-
-                                    override fun onFailure(t: Throwable?) {
-                                    
-                                    }
-                                })
-                            } catch (e: java.lang.Exception) {
-                                println("$e")
-                            }
+                            configureAfterSetup(con)
                             result.success("true")
                         } else {
                             result.success("false")
@@ -208,6 +194,31 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             }
         } else {
             result.success("false")
+        }
+    }
+
+    private fun configureAfterSetup(con: Context) {
+        try {
+            val iconId = con.resources.getIdentifier("ic_cqsdk_notification", "drawable", con.packageName)
+            if (iconId == 0) {
+                Carrot.setNotificationIcon(R.drawable.ic_cqsdk_def_notification)
+            } else {
+                Carrot.setNotificationIcon(iconId)
+            }
+
+            Carrot.setUnreadConversationsCallback(object : Callback<List<String>> {
+                override fun onResponse(unreadConversationsIds: List<String>?) {
+                    val count = unreadConversationsIds?.size ?: 0
+                    mainHandler.post {
+                        channel.invokeMethod("unreadConversationsCount", count)
+                    }
+                }
+
+                override fun onFailure(t: Throwable?) {
+                }
+            })
+        } catch (e: java.lang.Exception) {
+            println("$e")
         }
     }
 
@@ -267,9 +278,16 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             return
         }
 
+        if (isLoggingOut) {
+            result.success(null)
+            return
+        }
+        isLoggingOut = true
+
         Carrot.deInit(object : Callback<Boolean>{
             override fun onResponse(resDeInit: Boolean) {
                 if(!resDeInit) {
+                    isLoggingOut = false
                     result.error("deInit is failed", null, null)
                     return
                 }
@@ -278,27 +296,31 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
                 if (con != null) {
                     Carrot.setup(con, apiKey!!, object : Callback<Boolean> {
                         override fun onResponse(resultSetup: Boolean?) {
+                            isLoggingOut = false
                             try {
                                 if(resultSetup == true) {
+                                    configureAfterSetup(con)
                                     result.success(null)
                                 } else {
                                     result.error("Setup is failed", null, null)
                                 }
                             } catch (e: java.lang.Exception) {
-                                //result.error("Setup is failed", null, null)
                             }
                         }
 
                         override fun onFailure(t: Throwable?) {
+                            isLoggingOut = false
                             result.error("Setup is failed: " + t.toString(), null, null)
                         }
                     })
                 } else {
+                    isLoggingOut = false
                     result.error("Context is null", null, null)
                 }
             }
 
             override fun onFailure(t: Throwable) {
+                isLoggingOut = false
                 result.error(t.localizedMessage, null, null)
             }
         })
@@ -306,7 +328,7 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
     private fun sendToken(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
         val token = call.argument<String?>("token")
-        Carrot.sendFcmToken(token)
+        Carrot.sendPushToken(token)
 
         result.success(null)
     }
@@ -315,25 +337,11 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         @NonNull call: MethodCall,
         @NonNull result: MethodChannel.Result
     ) {
-        val bundle = Bundle()
         val data: Map<String, Any> =
             call.argument<Map<String, Any>>("data") ?: HashMap<String, Any>()
-            
-        //Bundle().put
-        
-        bundle.putString("id", data["id"]?.toString() ?: "")
-        bundle.putString("title", data["title"]?.toString() ?: "")
-        bundle.putString("body", data["body"]?.toString() ?: "")
-        bundle.putString("conversation_id", data["conversation_id"]?.toString() ?: "")
-        bundle.putString("conversation_type", data["conversation_type"]?.toString() ?: "")
-        bundle.putString("sent_via", data["sent_via"]?.toString() ?: "")
-        bundle.putString("body_json", data["body_json"]?.toString() ?: "")
 
-        bundle.putString("is_carrot", data["is_carrot"]?.toString() ?: "")
-        bundle.putString("direction", data["direction"]?.toString() ?: "")
-
-        val message = RemoteMessage(bundle)
-        Carrot.sendFirebasePushNotification(message, if(activity == null) context else activity)
+        val pushData = data.entries.associate { it.key to (it.value?.toString() ?: "") }
+        Carrot.sendPushNotification(pushData, if(activity == null) context else activity)
 
         result.success(null)
     }
@@ -390,7 +398,18 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
                 Carrot.trackEvent(event)
                 result.success(null)
             } else {
-                Carrot.trackEvent(event, paramsStr)
+                val json = JSONObject(paramsStr)
+                val builder = EventParams.builder()
+                for (key in json.keys()) {
+                    when (val value = json.get(key)) {
+                        is Boolean -> builder.put(key, value)
+                        is Int -> builder.put(key, value)
+                        is Long -> builder.put(key, value)
+                        is Double -> builder.put(key, value)
+                        else -> builder.put(key, value.toString())
+                    }
+                }
+                Carrot.trackEvent(event, builder.build())
                 result.success(null)
             }
 
@@ -407,7 +426,7 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             val count =  Carrot.getUnreadConversations().size
             result.success(count)
         } catch (e: Exception) {
-            result.error(e.localizedMessage, null, null)
+            result.success(0)
         }
     }
 

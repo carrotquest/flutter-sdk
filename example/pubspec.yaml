@@ -30,8 +30,8 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   # Firebase
-  firebase_core: ^2.15.0
-  firebase_messaging: ^14.6.5
+  firebase_core: ^4.12.1
+  firebase_messaging: ^16.4.3
   app_links: ^7.0.0
 
 dev_dependencies:

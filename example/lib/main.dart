@@ -54,6 +54,8 @@ class _MyAppState extends State<MyApp> {
 
   int unreadConversationsCount = 0;
 
+  bool _isLoggingOut = false;
+
   final _appLinks = AppLinks();
   StreamSubscription<Uri>? _linkSubscription;
 
@@ -114,6 +116,18 @@ class _MyAppState extends State<MyApp> {
     _linkSubscription = _appLinks.uriLinkStream.listen((uri) {
       Carrot.trackUtm(uri.toString());
     });
+  }
+
+  Future<void> _logOut() async {
+    setState(() => _isLoggingOut = true);
+    try {
+      await Carrot.trackEvent("Tap button", params: {"Button": "Log out"});
+      await Carrot.logOut();
+    } catch (e) {
+      debugPrint("Log out error: $e");
+    } finally {
+      if (mounted) setState(() => _isLoggingOut = false);
+    }
   }
 
   Future<bool> _initCarrotSdk() {
@@ -656,12 +670,7 @@ class _MyAppState extends State<MyApp> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {
-                        Carrot.trackEvent("Tap button",
-                            params: {"Button": "Log out"}).then((value) {
-                          Carrot.logOut();
-                        });
-                      },
+                      onPressed: _isLoggingOut ? null : _logOut,
                       child: const Padding(
                         padding: EdgeInsets.all(20),
                         child: Text("Log out"),

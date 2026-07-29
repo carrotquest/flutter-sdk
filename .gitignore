@@ -1,5 +1,8 @@
 .dart_tool/
 .idea/
+.DS_Store
+*.dill
+docs/
 
 # Build output (генерируется flutter build/test/analyze — не коммитить)
 build/

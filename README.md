@@ -5,7 +5,7 @@ SDK CarrotQuest для Flutter позволяет разработчикам и�
 - [Установка](#install)
 - [Инициализация](#init)
 - [Авторизация пользователей](#auth)
-- [Свойства пользователей и события ](#properties)
+- [Свойства пользователей и события](#properties)
 - [Чат с оператором](#chat)
 - [Уведомления](#notifications)
 - [Дополнительная информация об iOS](#additional_ios)
@@ -46,7 +46,7 @@ android {
 }
 ```
 
-Если вы используете proguard, то, возможно, для корректрой работы в файл proguard-rules.pro нужно добавить следующие строчки:
+Если вы используете proguard, то, возможно, для корректной работы в файл proguard-rules.pro нужно добавить следующие строчки:
 ```
 -keep class **.R$* { *; }
 -keep class org.xmlpull.v1.** { *; }
@@ -64,7 +64,7 @@ android {
 Carrot.setup(apiKey, appGroup: _appGroup);  
 ```
 
-На Android у Вас может возникнуть ошибка при попытке инициализации SDK(например когда Flutter приложение перезапустилось после долгого нахождения в фоне в то время как Android часть нет). Для избежания таких случаев, убедитесь что проверили статус инициализации SDK:
+На Android у Вас может возникнуть ошибка при попытке инициализации SDK (например когда Flutter приложение перезапустилось после долгого нахождения в фоне в то время как Android часть нет). Для избежания таких случаев, убедитесь что проверили статус инициализации SDK:
 
 ```dart  
 final isInit = await Carrot.isInit();
@@ -86,7 +86,18 @@ String? carrotId = await Carrot.auth(userId, userAuthKey: _userAuthKey)
 String? carrotId = await Carrot.auth(id, userHash: _hash)
 ```
 
-Методы auth возвращает CarrotID, который является уникальным идентификатором пользователя в сервисе. 
+Методы `auth` возвращают CarrotID, который является уникальным идентификатором пользователя в сервисе. 
+
+Вызывайте `auth` только после завершения инициализации SDK — например, дождавшись результата `Carrot.setup(...)`:
+
+```dart  
+final isInit = await Carrot.setup(apiKey, appGroup: appGroup);
+if (isInit) {
+  String? carrotId = await Carrot.auth(userId, userAuthKey: userAuthKey);
+}
+```
+
+Так SDK не будет создавать лишних анонимных пользователей (рекомендация нативного SDK начиная с версии 3.0.0).
 
 Чтобы сменить пользователя, нужно вызвать метод логаута:
 
@@ -155,30 +166,17 @@ appLinks.uriLinkStream.listen((uri) {
 ```
 <a name="chat"></a>
 ## Чат с оператором
-Вы можете дать пользователю мобильного приложения возможность перейти в чат с оператором из любого места. Для этого используете
+Вы можете дать пользователю мобильного приложения возможность перейти в чат с оператором из любого места. Для этого используйте
 ```dart  
  Carrot.openChat();  
 ```
 
-Получить количество непрочитанных диалогов и список их ID:
-
-```dart  
- Carrot.getUnreadConversationsCount();  
-```
-
-Подписаться на список непрочитанных диалогов:
-
-```dart  
- Carrot.getUnreadConversationsCountStream();  
-```
-
 <a name="notifications"></a>
-
 ## Уведомления
 Для работы с push-уведомлениями SDK использует сервис Firebase Cloud Messaging. В связи с этим необходимо получить ключ и отправить его в Carrot. Вы можете найти поле для ввода ключа на вкладке Настройки > Разработчикам. Процесс настройки сервиса Firebase Cloud Messaging описан [здесь](https://firebase.google.com/docs/cloud-messaging?authuser=0)
 
 Для работы push-уведомлений вам необходимо выполнить следующие шаги:
-1. Если вы еще не используете в своем проекте FCM, то добавьте в свой проект зависимости `firebase_core` и  `firebase_messaging`:
+1. Если вы еще не используете в своем проекте FCM, то добавьте в свой проект зависимости `firebase_core` и `firebase_messaging`:
       ```yaml
       dependencies:
         flutter:
@@ -192,9 +190,9 @@ appLinks.uriLinkStream.listen((uri) {
       ```console
       flutterfire configure
       ```
-      Более подробно о процессе установки FCM в свой Flutter-проект можно узнать в официальной  [документации](https://firebase.google.com/docs/flutter/setup?platform=android) 
+      Более подробно о процессе установки FCM в свой Flutter-проект можно узнать в официальной [документации](https://firebase.google.com/docs/flutter/setup?platform=android) 
 
-2. В файле `main.dart` перед объявления метода `main()` добавить (или модифицировать, если вы уже используете FCM у себя в проекте) хэндлер для пушей, которые будет приходить в фоне, внутри которого нужно прокинуть пуши в Carrot SDK, чтобы они корректно отобразились на устройстве:
+2. В файле `main.dart` перед объявлением метода `main()` добавить (или модифицировать, если вы уже используете FCM у себя в проекте) хэндлер для пушей, которые будут приходить в фоне, внутри которого нужно прокинуть пуши в Carrot SDK, чтобы они корректно отобразились на устройстве:
     ```dart
     @pragma('vm:entry-point')
     Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -207,15 +205,22 @@ appLinks.uriLinkStream.listen((uri) {
     }
     ```
 
+    Метод `Carrot.isCarrotQuestPush(data)` проверяет, отправлено ли уведомление сервисом Carrot quest. Используйте его, чтобы отделять пуши Carrot quest от остальных уведомлений вашего приложения: чужие пуши передавать в `Carrot.sendFirebasePushNotification(data)` не нужно.
+
 3. После инициализации Carrot SDK нужно отправить в сервис token от Firebase, используя метод `Carrot.sendFcmToken(token)`. Но перед тем как отправлять токен, убедитесь, что пользователь дал свое разрешение на показ уведомлений. Без этого разрешения токен не запишется в базу на сервере. 
 Также нужно задать для Firebase ранее написанный хэндлер для уведомлений, которые будут приходить при закрытом приложении, и написать листенер для уведомлений, которые будут приходить в открытое приложение. Например, так:
     ```dart
     Future<void> _initCarrotSdk() {
-        return Carrot.setup(_appId, _apiKey).then((isInit) async {
+        return Carrot.setup(_apiKey).then((isInit) async {
             if (!isInit) {
                 return;
             }
 
+            // NotificationService — НЕ часть SDK, а ваш собственный класс.
+            // Здесь подойдёт любой способ проверить разрешение на показ
+            // уведомлений: permission_handler, firebase_messaging
+            // (getNotificationSettings) и т.п. Готовый пример такого класса —
+            // example/lib/notification_service.dart.
             if (await NotificationService.checkPermissions()) {
                 _initFcm();
             }
@@ -246,7 +251,7 @@ appLinks.uriLinkStream.listen((uri) {
         }
     }
     ```
-4. Чтобы получать уведомления на устройства Apple, нужно открыть iOS часть своего проекта и написать код запроса на разрешения показа уведмолений. Для этого откройте AppDelegate и в функцию application допишите следущий код:
+4. Чтобы получать уведомления на устройства Apple, нужно открыть iOS часть своего проекта и написать код запроса на разрешения показа уведомлений. Для этого откройте AppDelegate и в функцию application допишите следующий код:
       ```swift
       override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
       	GeneratedPluginRegistrant.register(withRegistry: self)
@@ -298,26 +303,26 @@ appLinks.uriLinkStream.listen((uri) {
         }
     }
     ```
-6. Обратите внимание на строчку с group_id. По идее, этот пункт является не обязательным, и group_id в можно не передавать вовсе. Дело в том, что мы используем 2 канала доставки сообщений, поэтому в некоторых случаях уведомления могут дублироваться. Например: при выходе из приложения, или при очень быстром удалении уведомления, возможно получение повтороного уведомления. Если вы не замечаете дублирование сообщений, можете перейти сразу к шагу 11. Для предотвращения такого поведения нужно создать Notification Service Extension. В Xcode, в списке файлов выберите свой проект, а затем File/New/Target/Notification Service Extension. Так же, важно установить версию iOS для Notification Service Extension такую же, как у самого приложения.
+6. Обратите внимание на строчку с group_id. По идее, этот пункт является не обязательным, и group_id можно не передавать вовсе. Дело в том, что мы используем 2 канала доставки сообщений, поэтому в некоторых случаях уведомления могут дублироваться. Например: при выходе из приложения, или при очень быстром удалении уведомления, возможно получение повторного уведомления. Если вы не замечаете дублирование сообщений, можете перейти сразу к шагу 12. Для предотвращения такого поведения нужно создать Notification Service Extension. В Xcode, в списке файлов выберите свой проект, а затем File/New/Target/Notification Service Extension. Также важно установить версию iOS для Notification Service Extension такую же, как у самого приложения.
 7. После чего необходимо зарегистрировать AppGroup в [Apple Developer Portal](https://developer.apple.com/account/resources/identifiers/list/applicationGroup). Identifier App Group должен быть уникальным, и начинаться на "group." иначе Xcode его не примет. 
 8. Теперь необходимо добавить Identifier в Xcode:
 
 1) В списке файлов выберите свой проект. 
-2) В списке targets выберете пункт с именем вашего проекта. 
-3) Во вкладке "Singing & Capabitities" нажмите на "+ Capability". 
-4) В выпадающем списке найдите найдите и выберите App Group.
-5) На вкладке появится пустой список для идентификаторов App Group. Добавте туда Identifier, который зарегистрировали в Apple Developer Portal ранее. 
-6) Вернитесь к списку Targets. Аналогичным образом добавте App Group к вашему Notification Service Extension. 
+2) В списке targets выберите пункт с именем вашего проекта. 
+3) Во вкладке "Signing & Capabilities" нажмите на "+ Capability". 
+4) В выпадающем списке найдите и выберите App Group.
+5) На вкладке появится пустой список для идентификаторов App Group. Добавьте туда Identifier, который зарегистрировали в Apple Developer Portal ранее. 
+6) Вернитесь к списку Targets. Аналогичным образом добавьте App Group к вашему Notification Service Extension. 
 
 ![AppGroup](https://raw.githubusercontent.com/carrotquest/ios-sdk/dashly/assets/AppGroup.png)
 
-8. Внесите изменения в метод инициализирующий библиотеку:
+9. Внесите изменения в метод, инициализирующий библиотеку:
 
     ```dart
-    Carrot.setup(apiKey, appId, appGroup: <group_id>));
+    Carrot.setup(apiKey, appGroup: <group_id>);
     ```
 
-9. Теперь нужно добавить логику в ваш Notification Service Extension. В списке файлов, должна была появиться новая папка с именем вашего Notification Service Extension. Добавте код в файл NotificationService.swift:
+10. Теперь нужно добавить логику в ваш Notification Service Extension. В списке файлов, должна была появиться новая папка с именем вашего Notification Service Extension. Добавьте код в файл NotificationService.swift:
 
     ```swift
     import UserNotifications
@@ -334,7 +339,7 @@ appLinks.uriLinkStream.listen((uri) {
     }
     ```
 
-10. Обновите ваш pod файл, добавьте:
+11. Обновите ваш pod файл, добавьте:
 
     ```ruby
     target 'NotificationService' do
@@ -342,14 +347,30 @@ appLinks.uriLinkStream.listen((uri) {
     end
     ```
 
-11. Для Android устройств можно поменять иконку у уведомлений. Для этого положите в Android часть своего проекта нужную вам иконку с названием `ic_cqsdk_notification.xml`. 
+12. Для Android устройств можно поменять иконку у уведомлений. Для этого положите в Android часть своего проекта нужную вам иконку с названием `ic_cqsdk_notification.xml`. 
 
 После этого основная настройка push-уведомлений закончена. 
+
+### Отписка от уведомлений
+
+Если пользователь не хочет получать уведомления, его можно отписать. Для отписки от push-уведомлений используйте:
+
+```dart  
+Carrot.pushNotificationsUnsubscribe();
+```
+
+Для отписки от всех push-рассылок (кампаний):
+
+```dart  
+Carrot.pushCampaignsUnsubscribe();
+```
+
+Оба метода отписывают текущего пользователя, поэтому вызывать их нужно после инициализации SDK (и авторизации, если она используется).
 
 <a name="additional_ios"></a>
 ## Дополнительная информация об iOS
 
-Чтобы светлая тема правильно выглядела, вам нужно разрешить контроллерам управлять цветом статус-бара. Для этого откройте нативную iOS часть своего проекта и в файле info.plist в строчке под названием UIViewControllerBasedStatusBarAppearance поменяте false на true. Если вы открываете через Xcode, тогда эта строка называется "View controller-based status Bar appearance" и имеет значение NO. Вам необходимо поставить значение на YES. 
+Чтобы светлая тема правильно выглядела, вам нужно разрешить контроллерам управлять цветом статус-бара. Для этого откройте нативную iOS часть своего проекта и в файле info.plist в строчке под названием UIViewControllerBasedStatusBarAppearance поменяйте false на true. Если вы открываете через Xcode, тогда эта строка называется "View controller-based status Bar appearance" и имеет значение NO. Вам необходимо поставить значение на YES. 
 
 <a name="example"></a>
 ## Demo-приложение (example)

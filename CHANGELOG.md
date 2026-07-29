@@ -1,5 +1,10 @@
 ## 1.2.0
+- Updated the native SDKs: Android SDK to 3.1.0 and iOS SDK to 3.2.1.
+- [Android]: the minimum supported SDK is raised to 21 (required by the native Android SDK 3.x). If your app targets a lower `minSdkVersion`, you must raise it to 21.
+- [Android]: reworked chat with native UI components; new capabilities — attaching multiple files to a single message (previously a single file per message), voice messages, and an in-chat personal-data-processing consent block.
+- [iOS]: the conversation list and header now use native UI components.
 - Added the `Carrot.trackUtm(url)` method for tracking UTM tags (`utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`) from a URL. It is intended primarily for the case when the app is opened via a deeplink (URL Scheme / Universal Link / App Link): pass the opening URL and the SDK extracts and saves the UTM tags for the current user. Can be called even before `Carrot.setup()` completes. Supported on both Android and iOS.
+- Reliability: more reliable unread-conversations counter, more stable logout, and improved stability with Android code shrinking (R8/minification) enabled.
 - Example app: demonstrates UTM tracking via deeplinks using the `app_links` package, including the `carrotexample` URL scheme setup for Android and iOS.
 
 ## 1.1.1
