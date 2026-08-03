@@ -1,3 +1,6 @@
+## 1.2.1
+- [Android]: replaced the removed `jcenter()` repository with `mavenCentral()` in the plugin's `build.gradle`. Fixes the build failure `Could not find method jcenter()` on Gradle 9+ / AGP 9+. No other changes.
+
 ## 1.2.0
 - Updated the native SDKs: Android SDK to 3.1.0 and iOS SDK to 3.2.1.
 - [Android]: the minimum supported SDK is raised to 21 (required by the native Android SDK 3.x). If your app targets a lower `minSdkVersion`, you must raise it to 21.
