@@ -1,3 +1,12 @@
+## 1.3.0
+- Updated the native SDKs: Android SDK to 3.2.0 and iOS SDK to 3.2.2.
+- Quick-reply buttons in operator messages sent via the public API now work on both platforms.
+- The app setting that allows or forbids creating multiple conversations is now respected on both platforms: if creation is forbidden, the "Write" button always opens the same conversation.
+- [Android]: message replies (quoting) — reply to a specific message with a swipe or via the message actions menu.
+- [Android]: significantly improved authorization reliability: fixed situations where the user unexpectedly became anonymous, or the SDK got stuck in an "offline" state on a live network until the app was reinstalled. Such states are now detected and recovered automatically.
+- [Android]: the contact-collection setting is now respected in auto-replies: if it is disabled, the contact input field below an auto-reply is not shown.
+- [Android]: many minor chat fixes and overall stability improvements.
+
 ## 1.2.1
 - [Android]: replaced the removed `jcenter()` repository with `mavenCentral()` in the plugin's `build.gradle`. Fixes the build failure `Could not find method jcenter()` on Gradle 9+ / AGP 9+. No other changes.
 

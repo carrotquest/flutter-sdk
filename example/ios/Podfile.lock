@@ -2,9 +2,9 @@ PODS:
   - app_links (7.0.0):
     - Flutter
   - carrotquest_sdk (0.0.1):
-    - CarrotquestSDK (= 3.2.1)
+    - CarrotquestSDK (= 3.2.2)
     - Flutter
-  - CarrotquestSDK (3.2.1)
+  - CarrotquestSDK (3.2.2)
   - Firebase/CoreOnly (12.15.0):
     - FirebaseCore (~> 12.15.0)
   - Firebase/Messaging (12.15.0):
@@ -38,7 +38,7 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 8.1)
     - nanopb (~> 3.30910.0)
   - Flutter (1.0.0)
-  - GoogleDataTransport (10.1.0):
+  - GoogleDataTransport (10.1.1):
     - nanopb (~> 3.30910.0)
     - PromisesObjC (~> 2.4)
   - GoogleUtilities/AppDelegateSwizzler (8.1.2):
@@ -111,8 +111,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   app_links: a754cbec3c255bd4bbb4d236ecc06f28cd9a7ce8
-  carrotquest_sdk: ffd98a7f9fc8fe8d31d105bc90a73403bfb424d5
-  CarrotquestSDK: 49d41ccb9f4213111f76856d8e445f61392fc6d2
+  carrotquest_sdk: 9d14acfe6b6b812d73bcf74b592de7c7fb01fa3a
+  CarrotquestSDK: 79e5591abbb97dd4d4241c32847547384ee24be6
   Firebase: a8539b633d474fbeb654c7043f9c1649e274045b
   firebase_core: 1c1e250a77e2df9e80bb8bf0875c8b427044a697
   firebase_messaging: 90cf2b62f5058120ab19f29ceff1503ba0f51ba7
@@ -121,7 +121,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: eb29ccbf64eaedf86fd5b2ccc7fabde567660b52
   FirebaseMessaging: 40017d7bc8457ee295b0f41d480a80fdabc9994e
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
+  GoogleDataTransport: a24e58982ab3ba2f64d79613e027fe7f57e88539
   GoogleUtilities: 766ace00c6b10d8148408f329d10c4f051931850
   integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
