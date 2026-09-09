@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:carrotquest_sdk/carrot_theme.dart';
 import 'package:carrotquest_sdk/carrotquest_sdk_method_channel.dart';
 
 void main() {
@@ -41,5 +42,22 @@ void main() {
 
     expect(captured?.method, 'trackUtm');
     expect(captured?.arguments, {'url': url});
+  });
+
+  test('setTheme', () async {
+    MethodCall? captured;
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      channel,
+      (MethodCall methodCall) async {
+        captured = methodCall;
+        return null;
+      },
+    );
+
+    await platform.setTheme(CarrotTheme.fromDevice);
+
+    expect(captured?.method, 'setTheme');
+    expect(captured?.arguments, {'theme': 'from_device'});
   });
 }

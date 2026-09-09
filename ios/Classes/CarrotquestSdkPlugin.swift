@@ -35,6 +35,8 @@ public class CarrotquestSdkPlugin: NSObject, FlutterPlugin {
           self._getUnreadConversationsCount(with: result)
       case "openChat":
           self._openChat(with: result)
+      case "setTheme":
+          self._setTheme(with: call, and: result)
       case "pushNotificationsUnsubscribe":
           self._pushNotificationsUnsubscribe()
       case "pushCampaignsUnsubscribe":
@@ -60,7 +62,6 @@ public class CarrotquestSdkPlugin: NSObject, FlutterPlugin {
                 guard let self = self else { return }
                 self.channel?.invokeMethod("unreadConversationsCount", arguments: count)
             }
-            Carrot.shared.setTheme(.fromMobile)
 
             result("true")
         },
@@ -72,6 +73,32 @@ public class CarrotquestSdkPlugin: NSObject, FlutterPlugin {
 
     private func _openChat(with result: @escaping FlutterResult) {
       Carrot.shared.openChat()
+      result(nil)
+    }
+
+    private func _setTheme(with call: FlutterMethodCall, and result: @escaping FlutterResult) {
+      guard let args = call.arguments as? NSDictionary,
+            let themeName = args["theme"] as? String else {
+          result(FlutterError(code: "setTheme", message: "Theme is empty", details: nil))
+          return
+      }
+
+      let theme: Carrot.Theme
+      switch themeName {
+      case "light":
+          theme = .light
+      case "dark":
+          theme = .dark
+      case "from_device":
+          theme = .fromMobile
+      case "from_web":
+          theme = .fromWeb
+      default:
+          result(FlutterError(code: "setTheme", message: "Unknown theme", details: themeName))
+          return
+      }
+
+      Carrot.shared.setTheme(theme)
       result(nil)
     }
 

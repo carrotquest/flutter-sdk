@@ -1,6 +1,9 @@
+import 'package:carrotquest_sdk/carrot_theme.dart';
 import 'package:carrotquest_sdk/user_property/user_property.dart';
 
 import 'carrotquest_sdk_platform_interface.dart';
+
+export 'carrot_theme.dart';
 
 class Carrot {
   /// Setup SDK
@@ -36,6 +39,13 @@ class Carrot {
   /// Open chat
   static Future<void> openChat() {
     return CarrotquestSdkPlatform.instance.openChat();
+  }
+
+  /// Set the color theme of the chat UI
+  ///
+  /// Call it after [setup] (and after [auth], if you use it) has completed.
+  static Future<void> setTheme(CarrotTheme theme) {
+    return CarrotquestSdkPlatform.instance.setTheme(theme);
   }
 
   /// Get count unread conversations

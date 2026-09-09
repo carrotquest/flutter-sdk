@@ -1,3 +1,4 @@
+import 'package:carrotquest_sdk/carrot_theme.dart';
 import 'package:carrotquest_sdk/user_property/user_property.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -59,6 +60,10 @@ abstract class CarrotquestSdkPlatform extends PlatformInterface {
 
   Future<void> trackEvent(String event, {Map<String, String>? params}) {
     throw UnimplementedError('trackEvent() has not been implemented.');
+  }
+
+  Future<void> setTheme(CarrotTheme theme) {
+    throw UnimplementedError('setTheme() has not been implemented.');
   }
 
   Future<int> getUnreadConversationsCount() {

@@ -9,6 +9,7 @@ import android.util.Log
 import androidx.annotation.NonNull
 import io.carrotquest_sdk.android.Carrot
 import io.carrotquest_sdk.android.Carrot.Callback
+import io.carrotquest_sdk.android.core.main.ThemeSdk
 import io.carrotquest_sdk.android.models.EventParams
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -72,6 +73,11 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
         if (call.method == "openChat") {
             openChat(call, result)
+            return
+        }
+
+        if (call.method == "setTheme") {
+            setTheme(call, result)
             return
         }
 
@@ -358,6 +364,29 @@ class CarrotquestSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             } else {
                 result.error("Activity in null", null, null)
             }
+        } catch (e: Exception) {
+            result.error(e.localizedMessage, null, null)
+        }
+    }
+
+    private fun setTheme(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
+        if (!checkPluginInitiated(result)) {
+            return
+        }
+        try {
+            val theme = when (call.argument<String?>("theme")) {
+                "light" -> ThemeSdk.LIGHT
+                "dark" -> ThemeSdk.DARK
+                "from_device" -> ThemeSdk.FROM_DEVICE
+                "from_web" -> ThemeSdk.FROM_WEB
+                else -> {
+                    result.error("Unknown theme", null, null)
+                    return
+                }
+            }
+
+            Carrot.setTheme(theme)
+            result.success(null)
         } catch (e: Exception) {
             result.error(e.localizedMessage, null, null)
         }

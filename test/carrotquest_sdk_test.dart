@@ -1,3 +1,4 @@
+import 'package:carrotquest_sdk/carrot_theme.dart';
 import 'package:carrotquest_sdk/user_property/user_property.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:carrotquest_sdk/carrotquest_sdk_method_channel.dart';
@@ -82,6 +83,11 @@ class MockCarrotquestSdkPlatform
 
   @override
   Future<void> trackUtm(String url) {
+    return Future.value();
+  }
+
+  @override
+  Future<void> setTheme(CarrotTheme theme) {
     return Future.value();
   }
 }

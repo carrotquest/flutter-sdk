@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:carrotquest_sdk/carrot_theme.dart';
 import 'package:carrotquest_sdk/user_property/user_property.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -85,6 +86,13 @@ class MethodChannelCarrotquestSdk extends CarrotquestSdkPlatform {
           'trackEvent', {'event': event, 'params': paramsStr});
     }
 
+    return;
+  }
+
+  @override
+  Future<void> setTheme(CarrotTheme theme) async {
+    await methodChannel
+        .invokeMethod<String>('setTheme', {'theme': theme.channelValue});
     return;
   }
 

@@ -56,6 +56,8 @@ class _MyAppState extends State<MyApp> {
 
   bool _isLoggingOut = false;
 
+  CarrotTheme _theme = CarrotTheme.fromDevice;
+
   final _appLinks = AppLinks();
   StreamSubscription<Uri>? _linkSubscription;
 
@@ -550,6 +552,31 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  void _showThemeBottomSheet(BuildContext con) {
+    showModalBottomSheet(
+      context: con,
+      useSafeArea: true,
+      isScrollControlled: true,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: CarrotTheme.values.map((theme) {
+            return ListTile(
+              title: Text(theme.name),
+              trailing: theme == _theme ? const Icon(Icons.check) : null,
+              onTap: () async {
+                await Carrot.setTheme(theme);
+                setState(() => _theme = theme);
+                if (!context.mounted) return;
+                Navigator.of(context).pop();
+              },
+            );
+          }).toList(),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -667,6 +694,15 @@ class _MyAppState extends State<MyApp> {
                       child: const Padding(
                         padding: EdgeInsets.all(20),
                         child: Text("Simulate screen tracking"),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        _showThemeBottomSheet(mContext);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Text("Change chat theme (${_theme.name})"),
                       ),
                     ),
                     TextButton(

@@ -171,6 +171,20 @@ appLinks.uriLinkStream.listen((uri) {
  Carrot.openChat();  
 ```
 
+### Тема чата
+Вы можете задать цветовую тему чата с помощью метода `setTheme()`. Доступные значения `CarrotTheme`:
+
+- `CarrotTheme.light` — светлая тема;
+- `CarrotTheme.dark` — тёмная тема;
+- `CarrotTheme.fromDevice` — тема подстраивается под системную тему устройства;
+- `CarrotTheme.fromWeb` — используется тема, настроенная в админке Carrot quest.
+
+```dart  
+ Carrot.setTheme(CarrotTheme.dark);  
+```
+
+Метод нужно вызывать после завершения `Carrot.setup()` (и `Carrot.auth()`, если вы его используете).
+
 <a name="notifications"></a>
 ## Уведомления
 Для работы с push-уведомлениями SDK использует сервис Firebase Cloud Messaging. В связи с этим необходимо получить ключ и отправить его в Carrot. Вы можете найти поле для ввода ключа на вкладке Настройки > Разработчикам. Процесс настройки сервиса Firebase Cloud Messaging описан [здесь](https://firebase.google.com/docs/cloud-messaging?authuser=0)
