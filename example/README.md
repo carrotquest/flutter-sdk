@@ -1,8 +1,29 @@
 # Demo-приложение carrotquest_sdk
 
-Готовое приложение, которое показывает все возможности SDK на практике: инициализацию, авторизацию, свойства и события, чат, push-уведомления и трекинг UTM-меток.
+Готовое приложение, которое показывает все возможности SDK на практике: инициализацию, авторизацию, свойства и события, чат и его тему, push-уведомления, трекинг экранов и UTM-меток.
 
-Чтобы понять, как пользоваться SDK, чаще всего достаточно просто посмотреть код — главный файл [`lib/main.dart`](lib/main.dart).
+## Структура
+
+```
+lib/
+├── main.dart                     точка входа
+├── app.dart                      инициализация SDK, диплинки (UTM), тема, счётчик непрочитанных
+├── app_config.dart               ключи из --dart-define-from-file=config/secrets.json
+├── get_hash_use_case.dart        заглушка вычисления хэша для авторизации
+├── push/fcm_service.dart         Firebase Cloud Messaging → Carrot.sendFcmToken / sendFirebasePushNotification
+└── ui/
+    ├── screens/
+    │   ├── main_screen.dart              главный экран: чат, тема, логин, выход, разделы
+    │   ├── prepared_events_screen.dart   готовые события → Carrot.trackEvent
+    │   ├── custom_events_screen.dart     событие с произвольными параметрами
+    │   ├── screen_tracking_screen.dart   витрина Каталог → Товар → Корзина → Carrot.trackScreen
+    │   └── user_properties_screen.dart   Carrot().setUserProperty
+    ├── sheets/login_sheet.dart           Carrot.auth (User Auth Key или хэш)
+    ├── dialogs/fcm_token_dialog.dart     показать и скопировать FCM токен
+    └── widgets/settings_ui.dart          общие элементы списка настроек
+```
+
+Чтобы понять, как пользоваться SDK, чаще всего достаточно посмотреть [`lib/app.dart`](lib/app.dart) и нужный экран из `lib/ui/screens/`. Короткая выжимка со сниппетами — в [`example.md`](example.md).
 
 ## Запуск
 
@@ -41,7 +62,7 @@
 
    В VS Code уже есть готовые конфигурации запуска `example` / `example (profile mode)` / `example (release mode)` (см. [`../.vscode/launch.json`](../.vscode/launch.json)).
 
-> Ключи читаются через `String.fromEnvironment(...)` (см. [`lib/main.dart`](lib/main.dart)), поэтому без `--dart-define-from-file` поля останутся пустыми и SDK не инициализируется.
+> Ключи читаются через `String.fromEnvironment(...)` (см. [`lib/app_config.dart`](lib/app_config.dart)), поэтому без `--dart-define-from-file` они останутся пустыми и SDK не инициализируется. В этом случае на главном экране показывается предупреждение.
 
 ## Проверка трекинга UTM-меток
 

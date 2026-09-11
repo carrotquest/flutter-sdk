@@ -1,3 +1,14 @@
+## 1.4.0
+- Added `Carrot.setTheme(CarrotTheme)` to switch the chat theme: `light`, `dark`, `fromDevice` (follow the system appearance) or `fromWeb` (use the theme configured in the admin panel). On iOS the theme is no longer forced to follow the device after `setup()`; the native SDK default is used until you call `setTheme`.
+- Updated the native SDKs: Android SDK to 3.3.0 and iOS SDK to 3.3.0.
+- [iOS]: the chat UI is rewritten in SwiftUI; improved light and dark appearance, the theme now follows the system appearance dynamically.
+- [iOS]: the message input field is shown only when it is actually needed.
+- [iOS]: fixes and improvements related to logout; 
+- [Android]: tickets are now supported in the chat, the same way as in the web chat.
+- [Android]: pop-ups render in under a second instead of several seconds.
+- [Android]: fixed duplication of the first batch of bot messages when the bot was interrupted.
+- Example app: restructured into separate screens (events, screen tracking, user properties, push, theme); added `example/example.md` with the key snippets.
+
 ## 1.3.0
 - Updated the native SDKs: Android SDK to 3.2.0 and iOS SDK to 3.2.2.
 - Quick-reply buttons in operator messages sent via the public API now work on both platforms.
