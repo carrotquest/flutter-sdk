@@ -32,3 +32,8 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+# Swift Package Manager: the pinned package versions live in Runner.xcworkspace; the copy Xcode
+# writes when the .xcodeproj is opened directly and the per-user configuration are not tracked.
+Runner.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+Runner.xcworkspace/xcshareddata/swiftpm/configuration/

@@ -27,6 +27,9 @@ dependencies:
   carrotquest_sdk: <latest-version>
 ```
 
+### Дополнительная настройка для iOS
+Минимальная поддерживаемая версия iOS — 13. Плагин работает и со Swift Package Manager, и с CocoaPods, дополнительных действий при установке не требуется. При сборке через Swift Package Manager нативный SDK загружается из GitHub Releases пакета [carrotquest-ios-spm](https://github.com/carrotquest/carrotquest-ios-spm), поэтому машине, на которой идёт сборка, нужен доступ к github.com.
+
 ### Импортирование
 В Dart коде, добавьте следующую строку:
 
@@ -353,11 +356,15 @@ appLinks.uriLinkStream.listen((uri) {
     }
     ```
 
-11. Обновите ваш pod файл, добавьте:
+11. Сделайте `CarrotSDK` доступным внутри Notification Service Extension. Расширение собирается как отдельный таргет и не видит зависимости основного приложения, поэтому нативный SDK нужно подключить к нему отдельно. Выберите вариант по тому, как собирается iOS-часть вашего проекта.
+
+    **Swift Package Manager** (включён по умолчанию в новых проектах Flutter). В Xcode откройте настройки проекта, вкладку Package Dependencies, нажмите «+» и вставьте адрес `https://github.com/carrotquest/carrotquest-ios-spm`. Правило зависимости оставьте Up to Next Major Version, а в качестве нижней границы укажите `3.0.0`. В поле Add to Target выберите ваш Notification Service Extension. Конкретную версию Xcode подберёт сам: ту, которую требует плагин, и будет менять её вместе с обновлениями плагина.
+
+    **CocoaPods.** В Podfile добавьте таргет расширения с наследованием путей поиска:
 
     ```ruby
     target 'NotificationService' do
-     	inherit! :search_paths
+      inherit! :search_paths
     end
     ```
 
