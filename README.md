@@ -194,14 +194,8 @@ appLinks.uriLinkStream.listen((uri) {
 
 Для работы push-уведомлений вам необходимо выполнить следующие шаги:
 1. Если вы еще не используете в своем проекте FCM, то добавьте в свой проект зависимости `firebase_core` и `firebase_messaging`:
-      ```yaml
-      dependencies:
-        flutter:
-          sdk: flutter
-        
-        # Firebase
-        firebase_core: ^2.15.0
-        firebase_messaging: ^14.6.5
+      ```console
+      flutter pub add firebase_core firebase_messaging
       ```
       И после этого в каталоге проекта Flutter выполните следующую команду, чтобы запустить рабочий процесс настройки приложения:
       ```console

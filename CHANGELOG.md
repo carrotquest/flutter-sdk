@@ -1,3 +1,15 @@
+## 1.5.0
+- Added Swift Package Manager support on iOS. The plugin now ships `ios/carrotquest_sdk/Package.swift` and gets the native SDK from the `carrotquest-ios-spm` package, so projects with Swift Package Manager enabled no longer fall back to CocoaPods for this plugin. CocoaPods is still supported.
+- [iOS]: the minimum iOS version declared by the plugin is now 13.0 (the native SDK already required it).
+- [iOS]: if you use a Notification Service Extension with Swift Package Manager, add the `carrotquest-ios-spm` package to the extension target with the "Up to Next Major Version" rule; Xcode resolves it to the version required by the plugin. See the push notifications section in the README.
+- Updated the native SDKs: Android SDK to 3.4.2 and iOS SDK to 3.4.1.
+- Both platforms now respect every mode of the "How chat conversations work" setting: multiple conversations with closed ones read-only, one conversation at a time, and the mode where users cannot start conversations and only reply to the bot. In a closed conversation the input is replaced with a "Start a new conversation" button.
+- [iOS]: the native SDK is built with Swift 6 strict concurrency; the unread counter, push and custom link callbacks are now always delivered on the main thread.
+- [iOS]: the realtime chat connection recovers after a silent drop, so messages no longer stop arriving until the app is restarted.
+- [iOS]: fixed the unread counter coming back after an operator reply in an already open conversation; links without a scheme (e.g. `example.com`) now open correctly.
+- [Android]: fixed pop-up automation chains ("pop-up → wait for event → next pop-up") not advancing after a tap inside the pop-up.
+- [Android]: manual chat mailings show the full multi-paragraph text and inserted images; fixed the message text in new message notifications; more stable realtime connection.
+
 ## 1.4.0
 - Added `Carrot.setTheme(CarrotTheme)` to switch the chat theme: `light`, `dark`, `fromDevice` (follow the system appearance) or `fromWeb` (use the theme configured in the admin panel). On iOS the theme is no longer forced to follow the device after `setup()`; the native SDK default is used until you call `setTheme`.
 - Updated the native SDKs: Android SDK to 3.3.0 and iOS SDK to 3.3.0.
